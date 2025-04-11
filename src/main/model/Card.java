@@ -24,18 +24,14 @@ public class Card implements Comparable<Card>{
 	}
 	
 	@Override
-	  public int compareTo(Card other) {
-	    if (this.rank.getValue() < other.getRank().getValue()) {
+	public int compareTo(Card other) {
+		if (this.rank.getValue() < other.getRank().getValue()) {
 	    	return -1;
 	    }
 	    if (this.rank.getValue() > other.getRank().getValue()) {
 	    	return 1;
 	    }
 	    return 0;
-	  }
-	  
-	  public boolean equals(Card other) {
-		  return (this.rank.getValue() == other.getRank().getValue());
 	  }
 	
 }
