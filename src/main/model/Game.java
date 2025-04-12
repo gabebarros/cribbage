@@ -53,7 +53,7 @@ public class Game {
 		}
 		
 		
-		playStack.add(0, deck.draw());  // draw the starting card
+		Card startCard = deck.draw();  // draw the starting card
 		
 		
 		
