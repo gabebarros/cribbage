@@ -13,7 +13,6 @@ ArrayList<Card> cards = new ArrayList<Card>();
 			cards.add(new Card(rank, suit));
 			}
 		}
-		
 	}
 	
 	public void shuffle() {

@@ -52,6 +52,57 @@ class CardTest {
 		assertEquals(c2.compareTo(c1), 1);
 	}
 	
+	@Test
+	void testEquals_Equal() {
+		Card c1 = new Card(Rank.ACE, Suit.CLUBS);
+		Card c2 = new Card(Rank.ACE, Suit.CLUBS);
+		
+		assertEquals(c1, c2);
+	}
 	
+	@Test
+	void testEquals_SameObj() {
+		Card c1 = new Card(Rank.ACE, Suit.CLUBS);
+		
+		assertEquals(c1, c1);
+	}
+	
+	@Test
+	void testEquals_NotEqualRank() {
+		Card c1 = new Card(Rank.ACE, Suit.CLUBS);
+		Card c2 = new Card(Rank.TWO, Suit.CLUBS);
+		
+		assertNotEquals(c1, c2);
+	}
+	
+	@Test
+	void testEquals_NotEqualSuit() {
+		Card c1 = new Card(Rank.ACE, Suit.CLUBS);
+		Card c2 = new Card(Rank.ACE, Suit.HEARTS);
+		
+		assertNotEquals(c1, c2);
+	}
+	
+	@Test
+	void testEquals_NotEqualNull() {
+		Card c1 = new Card(Rank.ACE, Suit.CLUBS);
+		
+		assertNotEquals(c1, null);
+	}
+	
+	@Test
+	void testEquals_NotEqualDifferentType() {
+		Card c1 = new Card(Rank.ACE, Suit.CLUBS);
+		
+		assertNotEquals(c1, 1);
+	}
+	
+	@Test
+	void testHashCode() {
+		Card c1 = new Card(Rank.ACE, Suit.CLUBS);
+		Card c2 = new Card(Rank.ACE, Suit.CLUBS);
+		
+		assertEquals(c1.hashCode(), c2.hashCode());
+	}
 
 }
