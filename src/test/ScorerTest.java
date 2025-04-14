@@ -182,6 +182,66 @@ class ScorerTest {
 		assertEquals(s.scoreCombinations(hand), 0);
 	}
 	
+	@Test
+	void testRun_3() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(new Card(Rank.FIVE, Suit.HEARTS));
+		hand.add(new Card(Rank.TWO, Suit.SPADES));
+		hand.add(new Card(Rank.THREE, Suit.DIAMONDS));
+		hand.add(new Card(Rank.FOUR, Suit.SPADES));
+		hand.add(new Card(Rank.NINE, Suit.CLUBS));
+		
+		assertEquals(s.run(hand), 3);
+	}
+	
+	@Test
+	void testRun_4() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(new Card(Rank.ACE, Suit.HEARTS));
+		hand.add(new Card(Rank.TWO, Suit.SPADES));
+		hand.add(new Card(Rank.THREE, Suit.DIAMONDS));
+		hand.add(new Card(Rank.FOUR, Suit.SPADES));
+		hand.add(new Card(Rank.NINE, Suit.CLUBS));
+		
+		assertEquals(s.run(hand), 4);
+	}
+	
+	@Test
+	void testRun_5() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(new Card(Rank.ACE, Suit.HEARTS));
+		hand.add(new Card(Rank.TWO, Suit.SPADES));
+		hand.add(new Card(Rank.THREE, Suit.DIAMONDS));
+		hand.add(new Card(Rank.FOUR, Suit.SPADES));
+		hand.add(new Card(Rank.FIVE, Suit.CLUBS));
+		
+		assertEquals(s.run(hand), 5);
+	}
+	
+	@Test
+	void testRun_NoRun() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(new Card(Rank.ACE, Suit.HEARTS));
+		hand.add(new Card(Rank.TWO, Suit.SPADES));
+		hand.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
+		hand.add(new Card(Rank.FOUR, Suit.SPADES));
+		hand.add(new Card(Rank.FIVE, Suit.CLUBS));
+		
+		assertEquals(s.run(hand), 0);
+	}
+	
 	
 
 }

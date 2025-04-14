@@ -87,4 +87,26 @@ public class Scorer {
 
 	    return score;
 	}
+	
+	// FYI hand must be sorted
+	// Also, currently does not count face cards in sequences 
+	public int run(ArrayList<Card> hand) {
+	    int score = 0;
+	    int run = 1;
+	  
+	    for (int i = 0; i < hand.size()-1; i++) {
+	    	if (hand.get(i + 1).getValue() == hand.get(i).getValue() + 1 ) {
+	    		run++;
+	    	}
+	    	else {
+	    		run = 1;
+	    	}
+	    	
+	    	if (run == 3 || run == 4 || run == 5) {
+	    		score = run;
+	    	}
+	    }
+	    
+	    return score;
+	}
 }
