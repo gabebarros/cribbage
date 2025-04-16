@@ -71,16 +71,16 @@ public class Card implements Comparable<Card>{
 	
 	public static Card getCard(Rank rank, Suit suit) {
 		if(suit == Suit.CLUBS) {
-		return store[rank.getObjectiveValue()][0];
+		return store[rank.getObjectiveValue()-1][0];
 		}
 		if(suit == Suit.DIAMONDS) {
-		return store[rank.getObjectiveValue()][1];
+		return store[rank.getObjectiveValue()-1][1];
 		}
 		if(suit == Suit.HEARTS) {
-		return store[rank.getObjectiveValue()][2];
+		return store[rank.getObjectiveValue()-1][2];
 		}
 		if(suit == Suit.SPADES) {
-		return store[rank.getObjectiveValue()][3];
+		return store[rank.getObjectiveValue()-1][3];
 		}
 		
 		return null;

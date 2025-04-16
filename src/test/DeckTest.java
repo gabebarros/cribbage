@@ -30,7 +30,7 @@ class DeckTest {
 		Deck d = new Deck();
 		Card c = d.draw();
 		
-		assertEquals(c, new Card(Rank.ACE, Suit.CLUBS));
+		assertEquals(c, Card.getCard(Rank.ACE, Suit.CLUBS));
 	}
 	
 	@Test
