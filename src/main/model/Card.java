@@ -6,9 +6,10 @@ public class Card implements Comparable<Card>{
 	
 	private Rank rank;
 	private Suit suit;
+	private static Card[][] store = new Card[13][4];
 
 
-	public Card(Rank rank, Suit suit){
+	private Card(Rank rank, Suit suit){
 		this.rank = rank;
 		this.suit = suit;
 	}
@@ -52,6 +53,37 @@ public class Card implements Comparable<Card>{
 	@Override
 	public String toString(){
 		return this.rank + " of " + this.suit;
+	}
+	
+	static {
+		Rank[] ranks = {Rank.ACE, Rank.TWO, Rank.THREE, Rank.FOUR, Rank.FIVE, Rank.SIX,
+				Rank.SEVEN, Rank.EIGHT, Rank.NINE, Rank.TEN,
+				Rank.JACK, Rank.QUEEN, Rank.KING};
+		
+		Suit[] suits = {Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES};
+		
+		for (int i = 0; i < 13; i++) {
+			for (int j = 0; j < 4; j++) {
+				store[i][j] = new Card(ranks[i], suits[j]);
+			}
+		}
+	}
+	
+	public static Card getCard(Rank rank, Suit suit) {
+		if(suit == Suit.CLUBS) {
+		return store[rank.getObjectiveValue()][0];
+		}
+		if(suit == Suit.DIAMONDS) {
+		return store[rank.getObjectiveValue()][1];
+		}
+		if(suit == Suit.HEARTS) {
+		return store[rank.getObjectiveValue()][2];
+		}
+		if(suit == Suit.SPADES) {
+		return store[rank.getObjectiveValue()][3];
+		}
+		
+		return null;
 	}
 	
 }

@@ -17,5 +17,19 @@ public enum Rank {
 	  return value;
 	
 	}
+	
+	public int getObjectiveValue() {
+		if (this == JACK) {
+			return 11;
+		}
+		if(this == QUEEN) {
+			return 12;
+		}
+		if(this == KING) {
+			return 13;
+		}
+		
+		return this.getValue();
+	}
 
 }
