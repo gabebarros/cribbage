@@ -20,6 +20,9 @@ public class Scorer {
 		
 		int score = 0;
 		
+		// Two for his heels (2 points)
+		score += twoForHisHeels(startCard);
+		
 		// One for his knob (1 point)
 		score += oneForHisKnob(hand, startCard);
 		
@@ -42,6 +45,14 @@ public class Scorer {
 			}
 		}
 		return 0;
+	}
+	
+	public int twoForHisHeels(Card startCard) {
+		if (startCard.getRank().equals(Rank.JACK)) {
+			return 2;
+		}
+		return 0;
+		
 	}
 
 	public int countFifteens(ArrayList<Card> cards, int index, int currentSum) {
