@@ -263,6 +263,24 @@ class ScorerTest {
 		assertEquals(s.run(hand), 0);
 	}
 	
+	@Test
+	void testScoreHand() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		Card startCard = new Card(Rank.JACK, Suit.HEARTS);
+		
+		hand.add(new Card(Rank.FIVE, Suit.HEARTS));
+		hand.add(new Card(Rank.JACK, Suit.HEARTS));
+		hand.add(new Card(Rank.SEVEN, Suit.CLUBS));
+		hand.add(new Card(Rank.EIGHT, Suit.SPADES));
+		hand.add(new Card(Rank.NINE, Suit.SPADES));
+		
+		
+		assertEquals(s.scoreHand(hand, startCard),9);
+		
+	}
 	
 
 }
