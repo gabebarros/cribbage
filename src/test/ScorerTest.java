@@ -12,7 +12,28 @@ import main.model.Scorer;
 import main.model.Suit;
 
 class ScorerTest {
-
+    
+	@Test
+	void testTwoForHisHeels_True() {
+		Scorer s = new Scorer();
+		Card startCard = new Card(Rank.JACK, Suit.HEARTS);
+		Card startCard2 = new Card(Rank.JACK, Suit.DIAMONDS);
+		Card startCard3 = new Card(Rank.JACK, Suit.CLUBS);
+		Card startCard4 = new Card(Rank.JACK, Suit.SPADES);
+		
+		assertEquals(s.twoForHisHeels(startCard),2);
+		assertEquals(s.twoForHisHeels(startCard2),2);
+		assertEquals(s.twoForHisHeels(startCard3),2);
+		assertEquals(s.twoForHisHeels(startCard4),2);
+	}
+	
+	@Test
+	void testTwoForHisHeels_False() {
+		Scorer s = new Scorer();
+		Card startCard = new Card(Rank.EIGHT, Suit.HEARTS);
+		assertEquals(s.twoForHisHeels(startCard),0);
+	}
+	
 	@Test
 	void testOneForHisKnob_True() {
 		Scorer s = new Scorer();
