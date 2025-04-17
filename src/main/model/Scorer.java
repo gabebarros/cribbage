@@ -31,6 +31,9 @@ public class Scorer {
 		// count pair, 3 of a kind, 4 of a kind
 		score += scoreCombinations(hand);
 		
+		// check for run, 1 point for each card in the run
+		score += run(fullHand);
+		
 		
 		return score;
 	}
@@ -88,14 +91,13 @@ public class Scorer {
 	    return score;
 	}
 	
-	// FYI hand must be sorted
-	// Also, currently does not count face cards in sequences 
+	// hand must be sorted before calling
 	public int run(ArrayList<Card> hand) {
 	    int score = 0;
 	    int run = 1;
 	  
 	    for (int i = 0; i < hand.size()-1; i++) {
-	    	if (hand.get(i + 1).getValue() == hand.get(i).getValue() + 1 ) {
+	    	if (hand.get(i + 1).getRank().getObjectiveValue() == hand.get(i).getRank().getObjectiveValue() + 1 ) {
 	    		run++;
 	    	}
 	    	else {
