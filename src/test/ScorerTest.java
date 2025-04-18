@@ -16,10 +16,10 @@ class ScorerTest {
 	@Test
 	void testTwoForHisHeels_True() {
 		Scorer s = new Scorer();
-		Card startCard = new Card(Rank.JACK, Suit.HEARTS);
-		Card startCard2 = new Card(Rank.JACK, Suit.DIAMONDS);
-		Card startCard3 = new Card(Rank.JACK, Suit.CLUBS);
-		Card startCard4 = new Card(Rank.JACK, Suit.SPADES);
+		Card startCard = Card.getCard(Rank.JACK, Suit.HEARTS);
+		Card startCard2 = Card.getCard(Rank.JACK, Suit.DIAMONDS);
+		Card startCard3 = Card.getCard(Rank.JACK, Suit.CLUBS);
+		Card startCard4 = Card.getCard(Rank.JACK, Suit.SPADES);
 		
 		assertEquals(s.twoForHisHeels(startCard),2);
 		assertEquals(s.twoForHisHeels(startCard2),2);
@@ -30,7 +30,7 @@ class ScorerTest {
 	@Test
 	void testTwoForHisHeels_False() {
 		Scorer s = new Scorer();
-		Card startCard = new Card(Rank.EIGHT, Suit.HEARTS);
+		Card startCard = Card.getCard(Rank.EIGHT, Suit.HEARTS);
 		assertEquals(s.twoForHisHeels(startCard),0);
 	}
 	
@@ -276,6 +276,48 @@ class ScorerTest {
 		hand.add(Card.getCard(Rank.KING, Suit.CLUBS));
 		
 		assertEquals(s.run(hand), 4);
+	}
+	
+	@Test
+	void testFlush_4() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(Card.getCard(Rank.ACE, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.TEN, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.QUEEN, Suit.HEARTS));
+		
+		assertEquals(s.flush(Card.getCard(Rank.QUEEN, Suit.SPADES), hand), 4);
+	}
+	
+	@Test
+	void testFlush_5() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(Card.getCard(Rank.ACE, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.TEN, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.QUEEN, Suit.HEARTS));
+		
+		assertEquals(s.flush(Card.getCard(Rank.FOUR, Suit.HEARTS), hand), 5);
+	}
+	
+	@Test
+	void testFlush_NoFlush() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(Card.getCard(Rank.ACE, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.TEN, Suit.SPADES));
+		hand.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.QUEEN, Suit.HEARTS));
+		
+		assertEquals(s.flush(Card.getCard(Rank.FOUR, Suit.HEARTS), hand), 0);
 	}
 
 }

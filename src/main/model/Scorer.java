@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import javax.net.ssl.SSLEngineResult.HandshakeStatus;
+
 public class Scorer {
 
 	public Scorer() {
@@ -121,5 +123,21 @@ public class Scorer {
 	    }
 	    
 	    return score;
+	}
+	
+	public int flush(Card startCard, ArrayList<Card> hand) {
+		int score = 0;
+		
+		if (hand.get(0).getSuit() == hand.get(1).getSuit() &&
+			hand.get(1).getSuit() == hand.get(2).getSuit() &&
+			hand.get(2).getSuit() == hand.get(3).getSuit()) {
+			score += 4;
+			if (startCard.getSuit() == hand.get(0).getSuit()) {
+				score += 1;
+			}
+		}
+		
+		return score;
+		
 	}
 }
