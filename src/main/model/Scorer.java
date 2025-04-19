@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import javax.net.ssl.SSLEngineResult.HandshakeStatus;
-
 public class Scorer {
 
 	public Scorer() {
