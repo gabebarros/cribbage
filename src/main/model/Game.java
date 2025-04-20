@@ -12,6 +12,7 @@ public class Game {
     private ArrayList<Card> crib;
     private ArrayList<Card> playStack;
     private Card startCard;
+    private Scorer scorer;
     
     private List<GameObserver> observers = new ArrayList<>();
 
@@ -21,6 +22,7 @@ public class Game {
         this.deck = new Deck();
         this.crib = new ArrayList<>();
         this.playStack = new ArrayList<>();
+        this.scorer = new Scorer();
     }
 
     public void dealHands() {
@@ -79,11 +81,20 @@ public class Game {
         }
     }
     
-    // TODO implement actual scoring
-    // for now, Each play only counts as 1 point
     public void playCard(Card card, Player player) {
+    	if (scorer.playstack_sum(playStack) + card.getValue() > 31 && scorer.playstack_sum(playStack) != 31) {
+    		playStack.clear();
+    		
+    		if (player == player1) {
+    			player2.addScore(1);
+    		}
+    		else {
+    			player1.addScore(1);
+    		}
+    	}
+    	
         playStack.add(card);
-        int score = 1;
+        int score = scorer.scorePlayStack(playStack);
         player.addScore(score);
         updateScore(score);
         notifyPlayStackUpdated();

@@ -319,5 +319,186 @@ class ScorerTest {
 		
 		assertEquals(s.flush(Card.getCard(Rank.FOUR, Suit.HEARTS), hand), 0);
 	}
+	
+	@Test
+	void testPlayStackSum_Fifteen() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.TEN, Suit.SPADES));
+		
+		assertEquals(s.playstack_sum(playStack), 15);
+	}
+	
+	@Test
+	void testPlayStackPair_NoPair() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.SIX, Suit.HEARTS));
+		
+		assertEquals(s.playstack_pair(playStack), 0);
+	}
+	
+	@Test
+	void testPlayStackPair_Pair() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.SPADES));
+		
+		assertEquals(s.playstack_pair(playStack), 2);
+	}
+	
+	@Test
+	void testPlayStackPairRoyal_LessThan3() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.SPADES));
+		
+		assertEquals(s.playstack_pairRoyal(playStack), 0);
+	}
+	
+	@Test
+	void testPlayStackPairRoyal_NoPair() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.SIX, Suit.SPADES));
+		
+		assertEquals(s.playstack_pairRoyal(playStack), 0);
+	}
+	
+	@Test
+	void testPlayStackPairRoyal_Pair() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.CLUBS));
+		
+		assertEquals(s.playstack_pairRoyal(playStack), 6);
+	}
+	
+	@Test
+	void testPlayStackPairDoubleRoyal_LessThan4() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.CLUBS));
+		
+		assertEquals(s.playstack_pairDoubleRoyal(playStack), 0);
+	}
+	
+	@Test
+	void testPlayStackPairDoubleRoyal_NoPair() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.CLUBS));
+		playStack.add(Card.getCard(Rank.FOUR, Suit.CLUBS));
+		
+		assertEquals(s.playstack_pairDoubleRoyal(playStack), 0);
+	}
+	
+	@Test
+	void testPlayStackPairDoubleRoyal_Pair() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.CLUBS));
+		playStack.add(Card.getCard(Rank.FIVE, Suit.DIAMONDS));
+		
+		assertEquals(s.playstack_pairDoubleRoyal(playStack), 12);
+	}
+	
+	@Test
+	void testPlayStackRun_lessThan3() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.SIX, Suit.SPADES));
+		
+		assertEquals(s.playstack_Run(playStack), 0);
+	}
+	
+	@Test
+	void testPlayStackRun_noRun() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.SIX, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.EIGHT, Suit.SPADES));
+		
+		assertEquals(s.playstack_Run(playStack), 0);
+	}
+	
+	@Test
+	void testPlayStackRun_noRun2() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.TEN, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.JACK, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.QUEEN, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.FOUR, Suit.SPADES));
+		
+		assertEquals(s.playstack_Run(playStack), 0);
+	}
+	
+	@Test
+	void testPlayStackRun_Run() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.TEN, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.JACK, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.QUEEN, Suit.SPADES));
+		
+		assertEquals(s.playstack_Run(playStack), 3);
+	}
+	
+	@Test
+	void testPlayStackRun_Run2() {
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		playStack.add(Card.getCard(Rank.TEN, Suit.HEARTS));
+		playStack.add(Card.getCard(Rank.JACK, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.QUEEN, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.KING, Suit.SPADES));
+		
+		assertEquals(s.playstack_Run(playStack), 4);
+	}
 
 }

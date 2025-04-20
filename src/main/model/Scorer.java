@@ -3,6 +3,7 @@ package main.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class Scorer {
 
@@ -36,6 +37,36 @@ public class Scorer {
 		
 		// check for run, 1 point for each card in the run
 		score += run(fullHand);
+		
+		
+		return score;
+	}
+	
+	public int scorePlayStack(ArrayList<Card> playStack) {
+		int score = 0;
+		
+		// check if the stack's value is equal to 15
+		if (playstack_sum(playStack) == 15) {
+			score += 2;
+		}
+		
+		// check if the stack's value is equal to 31
+		if (playstack_sum(playStack) == 31) {
+			score += 2;
+		}
+		
+		// check pair/3 of a kind/ 4 of a kind
+		if (playstack_pairDoubleRoyal(playStack) == 12) {
+			score += 12;
+		}
+		else if (playstack_pairRoyal(playStack) == 6) {
+			score += 6;
+		}
+		else if (playstack_pair(playStack) == 2) {
+			score += 2;
+		}
+		
+		score += playstack_Run(playStack);
 		
 		
 		return score;
@@ -136,6 +167,111 @@ public class Scorer {
 		}
 		
 		return score;
-		
 	}
+	
+	public int playstack_sum(ArrayList<Card> playStack) {
+		int total = 0;
+		
+		for (Card c : playStack) {
+			total += c.getValue();
+		}
+		
+		return total;
+	}
+	
+	public int playstack_pair(ArrayList<Card> playStack) {
+		if (playStack.size() < 2) {
+			return 0;
+		}
+		
+		if (playStack.get(playStack.size()-1).getRank() == playStack.get(playStack.size()-2).getRank()) {
+			return 2;
+		}
+		
+		return 0;
+	}
+	
+	public int playstack_pairRoyal(ArrayList<Card> playStack) {
+		if (playStack.size() < 3) {
+			return 0;
+		}
+		
+		if (playStack.get(playStack.size()-1).getRank() == playStack.get(playStack.size()-2).getRank() &&
+			playStack.get(playStack.size()-2).getRank() == playStack.get(playStack.size()-3).getRank()) {
+			return 6;
+		}
+		
+		return 0;
+	}
+	
+	public int playstack_pairDoubleRoyal(ArrayList<Card> playStack) {
+		if (playStack.size() < 4) {
+			return 0;
+		}
+		
+		if (playStack.get(playStack.size()-1).getRank() == playStack.get(playStack.size()-2).getRank() &&
+			playStack.get(playStack.size()-2).getRank() == playStack.get(playStack.size()-3).getRank() &&
+			playStack.get(playStack.size()-3).getRank() == playStack.get(playStack.size()-4).getRank()){
+			return 12;
+		}
+		
+		return 0;
+	}
+	
+	public int playstack_Run(ArrayList<Card> playStack) {
+		if (playStack.size() < 3) {
+			return 0;
+		}
+		
+	    int maxRun = 0;
+
+	    // check all runs starting at 3
+	    for (int curRun = 3; curRun <= playStack.size(); curRun++) {
+	        List<Card> subList = playStack.subList(playStack.size() - curRun, playStack.size());
+
+	        if (playstack_RunHelper(subList)) {
+	            maxRun = curRun;
+	        }
+	        else {
+	        	return maxRun;
+	        }
+	    }
+
+	    return maxRun;
+	}
+	
+	private boolean playstack_RunHelper(List<Card> cards) {
+	    HashMap<Integer, Integer> map = new HashMap<>();
+	    for (Card c : cards) {
+	        int value = c.getRank().getObjectiveValue();
+	        
+	        if (!map.containsKey(value)) {
+	        	map.put(value, 1);
+	        }
+	        else {
+	        	map.put(value, map.get(value) + 1);
+	        }
+	        
+	    }
+
+	    // check for duplicates in the run
+	    for (int count : map.values()) {
+	        if (count > 1) {
+	            return false;
+	        }
+	    }
+
+	    // check for consecutive run
+	    List<Integer> sortedValues = new ArrayList<>(map.keySet());
+	    Collections.sort(sortedValues);
+
+	    for (int i = 1; i < sortedValues.size(); i++) {
+	        if (sortedValues.get(i) != sortedValues.get(i - 1) + 1) {
+	            return false;
+	        }
+	    }
+
+	    return true;
+	}
+	
 }
