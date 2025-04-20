@@ -73,33 +73,30 @@ public class Game {
         }
     }
     
-    private void playRound(String dealer) {
-		Scanner scanner = new Scanner(System.in);  // use to get user input
-		String input;
-		
-		
-		
-		dealHands();
-		
-		System.out.println(player1.getName() + ": what is the first card you want to add to the crib?");
-		input = scanner.nextLine();
-		crib.add(player1.playCard(Integer.parseInt(input)));
-		
-		System.out.println(player1.getName() + ": what is the second card you want to add to the crib?");
-		input = scanner.nextLine();
-		crib.add(player1.playCard(Integer.parseInt(input)));
-		
-		System.out.println(player2.getName() + ": what is the first card you want to add to the crib?");
-		input = scanner.nextLine();
-		crib.add(player2.playCard(Integer.parseInt(input)));
-		
-		System.out.println(player2.getName() + ": what is the second card you want to add to the crib?");
-		input = scanner.nextLine();
-		crib.add(player2.playCard(Integer.parseInt(input)));
-		
-		startCard = deck.draw();
-		
-		
-		
-	}
+    private void notifyPlayStackUpdated() {
+        for (GameObserver o : observers) {
+            o.onPlayStackUpdated(playStack);
+        }
+    }
+    
+    // TODO implement actual scoring
+    // for now, Each play only counts as 1 point
+    public void playCard(Card card, Player player) {
+        playStack.add(card);
+        int score = 1;
+        player.addScore(score);
+        updateScore(score);
+        notifyPlayStackUpdated();
+    }
+    
+    private void updateScore(int score) {
+        notifyScoreUpdated();  // Notify the observers about the score update
+    }
+
+    private void notifyScoreUpdated() {
+        for (GameObserver o : observers) {
+            o.onScoreUpdated(player1.getScore(), player2.getScore());  // Pass updated scores to observers
+        }
+    }
+
 }

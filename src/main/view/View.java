@@ -9,7 +9,8 @@ import main.controller.Controller;
 import main.model.*;
 
 public class View extends JFrame implements GameObserver {
-	private Controller controller;
+	private static Controller controller;
+	private static Game game;
 	
     private JPanel player1Panel = new JPanel();
     private JPanel player2Panel = new JPanel();
@@ -19,49 +20,63 @@ public class View extends JFrame implements GameObserver {
     private JPanel scorePanel = new JPanel();
     private JLabel player1ScoreLabel;
     private JLabel player2ScoreLabel;
+    
+    private JPanel playAreaPanel = new JPanel();
 
     public View(String p1, String p2) {
         setTitle("Cribbage");
-        setSize(1000, 900);
+        setSize(1300, 900);
         setLayout(new BorderLayout());
 
+        // Player hands
         player1Panel.setBorder(BorderFactory.createTitledBorder(p1));
         add(player1Panel, BorderLayout.SOUTH);
 
         player2Panel.setBorder(BorderFactory.createTitledBorder(p2));
         add(player2Panel, BorderLayout.NORTH);
 
-        cribPanel.setBorder(BorderFactory.createTitledBorder("Crib + Starter"));
-        cribPanel.setLayout(new BorderLayout());
-        cribPanel.add(starterCardLabel, BorderLayout.NORTH);
+        // Crib panel in center (will now hold starter, crib, play area, and scores)
+        cribPanel.setBorder(BorderFactory.createTitledBorder("Play Area"));
+        cribPanel.setLayout(new BoxLayout(cribPanel, BoxLayout.Y_AXIS));  // Stack vertically
+        add(cribPanel, BorderLayout.CENTER);
+
+        // Starter card label
+        starterCardLabel.setAlignmentX(Component.CENTER_ALIGNMENT);  // Center horizontally
+        cribPanel.add(starterCardLabel);
+
+        // Crib cards section
         JPanel cribContainer = new JPanel();
         cribContainer.setLayout(new BorderLayout());
 
-        JLabel cribLabel = new JLabel("Crib Cards:", SwingConstants.CENTER);
+        JLabel cribLabel = new JLabel("Crib:", SwingConstants.CENTER);
         cribContainer.add(cribLabel, BorderLayout.NORTH);
 
-        cribCardsPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Ensure crib cards are also centered
+        cribCardsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         cribContainer.add(cribCardsPanel, BorderLayout.CENTER);
 
-        cribPanel.add(cribContainer, BorderLayout.CENTER);
-        
+        cribPanel.add(cribContainer);
+
+        // Play area section
+        playAreaPanel.setBorder(BorderFactory.createTitledBorder("Play Stack"));
+        playAreaPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        playAreaPanel.setPreferredSize(new Dimension(600, 150));
+        cribPanel.add(playAreaPanel);
+
+        // Score panel
         player1ScoreLabel = new JLabel(p1 + " : 0");
         player2ScoreLabel = new JLabel(p2 + " : 0");
-        
-        // Create a score panel for the bottom right of the cribPanel
+
         scorePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 1;  // Position to the right (GridBagLayout index starts at 0)
-        gbc.gridy = 1;  // Position to the bottom (GridBagLayout index starts at 0)
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
         scorePanel.add(player1ScoreLabel, gbc);
 
-        gbc.gridy = 2;  // Move to the next row
+        gbc.gridy = 1;
         scorePanel.add(player2ScoreLabel, gbc);
 
-        // Place the score panel in the bottom-right of the cribPanel
-        cribPanel.add(scorePanel, BorderLayout.SOUTH);
-
-        add(cribPanel, BorderLayout.CENTER);
+        cribPanel.add(scorePanel);  // Now at the bottom of the stacked crib panel
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -120,14 +135,32 @@ public class View extends JFrame implements GameObserver {
         player1ScoreLabel.setText("Player 1 Score: " + player1Score);
         player2ScoreLabel.setText("Player 2 Score: " + player2Score);
     }
+    
+    @Override
+    public void onPlayStackUpdated(ArrayList<Card> playStack) {
+        // Clear the play area and redraw all cards in the play stack
+        playAreaPanel.removeAll();
+        for (Card card : playStack) {
+            JButton cardButton = new JButton(card.toString()); // or use an image
+            playAreaPanel.add(cardButton);
+        }
+        playAreaPanel.revalidate();
+        playAreaPanel.repaint();
+    }
+    
+    @Override
+    public void onScoreUpdated(int player1Score, int player2Score) {
+        player1ScoreLabel.setText(game.getPlayer1().getName() + ": " + player1Score);
+        player2ScoreLabel.setText(game.getPlayer2().getName() + ": " + player2Score);
+    }
 
     public static void main(String[] args) {
-        Game game = new Game("Bob", "CPU");
+        game = new Game("Bob", "CPU");
         View view = new View("Bob", "CPU");
-        Controller controller = new Controller(game, view);
+        controller = new Controller(game, view);
 
         game.dealHands();
-        controller.showHands();
+        controller.playCrib();
 
         // Display the crib card prompt
         view.promptChooseCribCards();
