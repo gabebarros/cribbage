@@ -10,7 +10,7 @@ ArrayList<Card> cards = new ArrayList<Card>();
 	public Deck() {
 		for (Suit suit : Suit.values()) {
 			for (Rank rank : Rank.values()) {
-			cards.add(new Card(rank, suit));
+			cards.add(Card.getCard(rank, suit));
 			}
 		}
 	}
