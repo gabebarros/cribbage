@@ -123,6 +123,15 @@ public class Game {
             o.onScoreUpdated(player1.getScore(), player2.getScore());  // Pass updated scores to observers
         }
     }
+    
+    public void resetForNewRound() {
+        this.deck = new Deck();
+        this.crib.clear();
+        this.playStack.clear();
+        this.startCard = null;
+        
+        notifyPlayStackUpdated();
+    }
 
     
 
