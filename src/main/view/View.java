@@ -121,20 +121,6 @@ public class View extends JFrame implements GameObserver {
     public void onStarterCardDrawn(Card card) {
         updateStarterCard(card);
     }
-
-    // New method to display the crib card prompt
-    public void promptChooseCribCards() {
-        String message = "Please choose 2 cards for your crib.";
-        String title = "Choose Crib Cards";
-
-        // Show a modal dialog asking the user to choose the crib cards
-        JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    public void updateScores(int player1Score, int player2Score) {
-        player1ScoreLabel.setText("Player 1 Score: " + player1Score);
-        player2ScoreLabel.setText("Player 2 Score: " + player2Score);
-    }
     
     @Override
     public void onPlayStackUpdated(ArrayList<Card> playStack) {
@@ -158,12 +144,7 @@ public class View extends JFrame implements GameObserver {
         game = new Game("Bob", "CPU");
         View view = new View("Bob", "CPU");
         controller = new Controller(game, view);
-
-        game.dealHands();
-        controller.playCrib();
-
-        // Display the crib card prompt
-        view.promptChooseCribCards();
         
+        controller.startGame();
     }
 }
