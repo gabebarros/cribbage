@@ -15,6 +15,7 @@ public class Game {
     private Scorer scorer;
     private ArrayList<Card> player1OriginalHand;
     private ArrayList<Card> player2OriginalHand;
+    private Player dealer;
     
     private List<GameObserver> observers = new ArrayList<>();
 
@@ -131,6 +132,14 @@ public class Game {
         this.startCard = null;
         
         notifyPlayStackUpdated();
+    }
+    
+    public void setDealer(Player p) {
+    	this.dealer = p;
+    }
+    
+    public Player getDealer() {
+    	return this.dealer;
     }
 
     

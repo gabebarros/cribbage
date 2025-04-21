@@ -83,7 +83,12 @@ public class View extends JFrame implements GameObserver {
     }
 
     public void updateStarterCard(Card card) {
-        starterCardLabel.setText("Starter: " + card);
+    	if (card == null) {
+    		starterCardLabel.setText(null);
+    	}
+    	else {
+    		starterCardLabel.setText("Starter: " + card);
+    	} 
     }
 
     public void updatePlayerHand(Player player, JPanel panel, ActionListener listener) {
@@ -138,6 +143,23 @@ public class View extends JFrame implements GameObserver {
     public void onScoreUpdated(int player1Score, int player2Score) {
         player1ScoreLabel.setText(game.getPlayer1().getName() + ": " + player1Score);
         player2ScoreLabel.setText(game.getPlayer2().getName() + ": " + player2Score);
+    }
+    
+    public void updateDealerIndicator(Player dealer) {
+        String p1Title = controller.getGame().getPlayer1().getName();
+        String p2Title = controller.getGame().getPlayer2().getName();
+
+        if (dealer == controller.getGame().getPlayer1()) {
+            p1Title += " (Dealer)";
+        } else {
+            p2Title += " (Dealer)";
+        }
+
+        player1Panel.setBorder(BorderFactory.createTitledBorder(p1Title));
+        player2Panel.setBorder(BorderFactory.createTitledBorder(p2Title));
+
+        player1Panel.repaint();
+        player2Panel.repaint();
     }
 
     public static void main(String[] args) {
