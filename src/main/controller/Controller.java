@@ -91,6 +91,8 @@ public class Controller {
 
     public void startGame() {
         // Kick off the first round
+    	game.setDealer(game.getPlayer2());
+    	view.updateDealerIndicator(game.getPlayer2());
         startRound();
     }
 
@@ -120,7 +122,14 @@ public class Controller {
 
         game.getPlayer1().addScore(p1Points);
         game.getPlayer2().addScore(p2Points);
-        game.getPlayer2().addScore(cribPoints); // assuming player 2 is dealer
+        
+        if (game.getDealer() == game.getPlayer2()) {
+        	game.getPlayer2().addScore(cribPoints);
+        }
+        else {
+        	game.getPlayer1().addScore(cribPoints);
+        }
+        
 
         game.updateScore();
 
@@ -140,6 +149,10 @@ public class Controller {
             "Show Phase",
             JOptionPane.INFORMATION_MESSAGE
         );
+        
+        game.resetForNewRound();
+        view.onCribUpdated();
+        view.updateStarterCard(null);
 
         // Check win condition
         if (game.getPlayer1().getScore() >= 121 || game.getPlayer2().getScore() >= 121) {
@@ -151,6 +164,15 @@ public class Controller {
             return;
         }
 
+        if (game.getDealer() == game.getPlayer2()) {
+        	game.setDealer(game.getPlayer1());
+        	view.updateDealerIndicator(game.getPlayer1());
+        }
+        else {
+        	game.setDealer(game.getPlayer2());
+        	view.updateDealerIndicator(game.getPlayer2());
+        }
+        
         // Start next round
         startRound();
     }
