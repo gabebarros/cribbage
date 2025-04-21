@@ -50,10 +50,38 @@ public class Card implements Comparable<Card>{
 	    return Objects.hash(rank, suit);
 	}
 	
-	@Override
-	public String toString(){
-		return this.rank + " of " + this.suit;
-	}
+	public String toString() {
+		  String rank = "";
+		  String suit = "";
+		  if (this.suit == Suit.CLUBS) {
+			  suit += '\u2663';
+		  }
+		  if (this.suit == Suit.DIAMONDS) {
+			  suit += '\u2666';
+		  }
+		  if (this.suit == Suit.HEARTS) {
+			  suit += '\u2665';
+		  }
+		  if (this.suit == Suit.SPADES) {
+			  suit += '\u2660';
+		  }
+		  if (this.getValue() == 1) {
+			  rank += "A";
+		  }
+		  if (this.getRank().getObjectiveValue() == 11) {
+			  rank += "J";
+		  }
+		  if (this.getRank().getObjectiveValue() == 12) {
+			  rank += "Q";
+		  }
+		  if (this.getRank().getObjectiveValue() == 13) {
+			  rank += "K";
+		  }
+		  if (this.getRank().getObjectiveValue() < 11 && this.getRank().getObjectiveValue() > 1) {
+			  rank += Integer.toString(this.getValue());
+		  }
+		  return rank + suit;
+	  }
 	
 	static {
 		Rank[] ranks = {Rank.ACE, Rank.TWO, Rank.THREE, Rank.FOUR, Rank.FIVE, Rank.SIX,
