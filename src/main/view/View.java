@@ -163,10 +163,39 @@ public class View extends JFrame implements GameObserver {
     }
 
     public static void main(String[] args) {
-        game = new Game("Bob", "CPU");
-        View view = new View("Bob", "CPU");
+        String[] options = {"Human vs Human", "Human vs CPU"};
+        int mode = JOptionPane.showOptionDialog(
+            null,
+            "Choose game mode:",
+            "Cribbage Game Mode",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            null
+        );
+
+        String player1Name = JOptionPane.showInputDialog(null, "Enter name for Player 1:");
+        if (player1Name == null || player1Name.trim().isEmpty()) {
+            player1Name = "Player 1";
+        }
+
+        String player2Name;
+
+        if (mode == 1) { // Human vs CPU
+            player2Name = "CPU";
+        } else { // Human vs Human or default
+            player2Name = JOptionPane.showInputDialog(null, "Enter name for Player 2:");
+            if (player2Name == null || player2Name.trim().isEmpty()) {
+                player2Name = "Player 2";
+            }
+        }
+
+        game = new Game(player1Name, player2Name);
+        View view = new View(player1Name, player2Name);
         controller = new Controller(game, view);
-        
+
         controller.startGame();
     }
+
 }
