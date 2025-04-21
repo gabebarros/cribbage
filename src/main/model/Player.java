@@ -1,6 +1,7 @@
 package main.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Player {
 	
@@ -47,6 +48,10 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+    
+    public void sortHand() {
+    	Collections.sort(hand);
     }
 
 }

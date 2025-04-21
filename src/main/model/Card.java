@@ -28,10 +28,10 @@ public class Card implements Comparable<Card>{
 	
 	@Override
 	public int compareTo(Card other) {
-		if (this.rank.getValue() < other.getRank().getValue()) {
+		if (this.rank.getObjectiveValue() < other.getRank().getObjectiveValue()) {
 	    	return -1;
 	    }
-	    if (this.rank.getValue() > other.getRank().getValue()) {
+	    if (this.rank.getObjectiveValue() > other.getRank().getObjectiveValue()) {
 	    	return 1;
 	    }
 	    return 0;
@@ -81,6 +81,7 @@ public class Card implements Comparable<Card>{
 		}
 		if(suit == Suit.SPADES) {
 		return store[rank.getObjectiveValue() - 1][3];
+
 		}
 		
 		return null;
