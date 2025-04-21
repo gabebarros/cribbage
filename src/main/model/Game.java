@@ -13,6 +13,8 @@ public class Game {
     private ArrayList<Card> playStack;
     private Card startCard;
     private Scorer scorer;
+    private ArrayList<Card> player1OriginalHand;
+    private ArrayList<Card> player2OriginalHand;
     
     private List<GameObserver> observers = new ArrayList<>();
 
@@ -58,6 +60,22 @@ public class Game {
         this.startCard = deck.draw();
         notifyStarterCardDrawn();
     }
+    
+    public void setPlayer1OriginalHand(ArrayList<Card> hand) {
+        this.player1OriginalHand = hand;
+    }
+
+    public void setPlayer2OriginalHand(ArrayList<Card> hand) {
+        this.player2OriginalHand = hand;
+    }
+
+    public ArrayList<Card> getPlayer1OriginalHand() {
+        return player1OriginalHand;
+    }
+
+    public ArrayList<Card> getPlayer2OriginalHand() {
+        return player2OriginalHand;
+    }
 
     public void addObserver(GameObserver observer) {
         observers.add(observer);
@@ -96,18 +114,16 @@ public class Game {
         playStack.add(card);
         int score = scorer.scorePlayStack(playStack);
         player.addScore(score);
-        updateScore(score);
+        updateScore();
         notifyPlayStackUpdated();
     }
     
-    private void updateScore(int score) {
-        notifyScoreUpdated();  // Notify the observers about the score update
-    }
-
-    private void notifyScoreUpdated() {
-        for (GameObserver o : observers) {
+    public void updateScore() {
+    	for (GameObserver o : observers) {
             o.onScoreUpdated(player1.getScore(), player2.getScore());  // Pass updated scores to observers
         }
     }
+
+    
 
 }
