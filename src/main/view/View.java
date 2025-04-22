@@ -91,12 +91,12 @@ public class View extends JFrame implements GameObserver {
     	} 
     }
 
-    public void updatePlayerHand(Player player, JPanel panel, ActionListener listener, boolean cpuMode) {
+    public void updatePlayerHand(Player player, JPanel panel, ActionListener listener, GameMode gamemode) {
         panel.removeAll();
         int index = 0;
         JButton b;
         for (Card c : player.getHand()) {
-        	if (cpuMode && game.getPlayer2() == player) {
+        	if ((gamemode == GameMode.CPU_EASY || gamemode == gamemode.CPU_HARD) && game.getPlayer2() == player) {
         		b = new JButton(" ");
         	}
         	else {
@@ -187,22 +187,39 @@ public class View extends JFrame implements GameObserver {
         }
 
         String player2Name;
-        boolean cpuMode;
+        GameMode gamemode;
 
         if (mode == 1) { // Human vs CPU
             player2Name = "CPU";
-            cpuMode = true;
+            
+            String[] difficultyOptions = {"Easy", "Hard"};
+            int difficulty = JOptionPane.showOptionDialog(
+                null,
+                "Choose CPU difficulty:",
+                "CPU Difficulty",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                difficultyOptions,
+                null
+            );
+
+            if (difficulty == 0) {
+                gamemode = GameMode.CPU_EASY;
+            } else {
+                gamemode = GameMode.CPU_HARD;
+            }
         } else { // Human vs Human or default
             player2Name = JOptionPane.showInputDialog(null, "Enter name for Player 2:");
             if (player2Name == null || player2Name.trim().isEmpty()) {
                 player2Name = "Player 2";
             }
-            cpuMode = false;
+            gamemode = GameMode.PVP;
         }
-
+        
         game = new Game(player1Name, player2Name);
         View view = new View(player1Name, player2Name);
-        controller = new Controller(game, view, cpuMode);
+        controller = new Controller(game, view, gamemode);
 
         controller.startGame();
     }

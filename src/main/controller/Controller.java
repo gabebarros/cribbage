@@ -14,15 +14,17 @@ public class Controller {
     private Scorer scorer;
     private int cribCount = 0;
     private boolean isPlayer1Turn = true;
-    private boolean cpuMode;
+    private GameMode gamemode;
+   // private boolean cpuMode;
+   // private boolean difficulty;
 
-    public Controller(Game game, View view, boolean cpuMode) {
+    public Controller(Game game, View view, GameMode gamemode) {
         this.game = game;
         this.view = view;
         this.scorer = new Scorer();
         game.addObserver(view);
         view.setController(this);
-        this.cpuMode = cpuMode;
+        this.gamemode = gamemode;
     }
 
     public Game getGame() {
@@ -38,9 +40,9 @@ public class Controller {
                 cribCount++;
                 playCrib();
             }
-        }, cpuMode);
+        }, gamemode);
 
-        if (!cpuMode) {
+        if (gamemode == GameMode.PVP) {
         	view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {
                 int index = Integer.parseInt(e.getActionCommand());
                 if (cribCount >= 2 && cribCount < 4) {
@@ -55,10 +57,10 @@ public class Controller {
                         playCardToStack();
                     }
                 }
-            }, cpuMode);
+            }, gamemode);
         }
         else {
-        	view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), null, cpuMode);
+        	view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), null, gamemode);
         	int index = new Random().nextInt(game.getPlayer2().getHand().size());
             if (cribCount >= 2 && cribCount < 4) {
             	new javax.swing.Timer(1000, e -> {
@@ -93,13 +95,14 @@ public class Controller {
                 game.playCard(playedCard, game.getPlayer1());
                 isPlayer1Turn = false;
                 updateHands();
-            }, cpuMode);
-            view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, cpuMode);
+            }, gamemode);
+            view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, gamemode);
         } else {
-            if (cpuMode) {
+            if (gamemode == GameMode.CPU_EASY || gamemode == GameMode.CPU_HARD) {
             	new javax.swing.Timer(1000, e -> {
-            		int index = new Random().nextInt(game.getPlayer2().getHand().size());
-                	Card playedCard = game.getPlayer2().playCard(index);
+            		//int index = new Random().nextInt(game.getPlayer2().getHand().size());
+                	//Card playedCard = game.getPlayer2().playCard(index);
+            		Card playedCard = game.getPlayer2().makeSmartMove(game.getPlayStack());
                     game.playCard(playedCard, game.getPlayer2());
                     isPlayer1Turn = true;
                     updateHands();
@@ -112,15 +115,15 @@ public class Controller {
                     game.playCard(playedCard, game.getPlayer2());
                     isPlayer1Turn = true;
                     updateHands();
-                }, cpuMode);
-                view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {}, cpuMode);
+                }, gamemode);
+                view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {}, gamemode);
             }
         }
     }
 
     private void updateHands() {
-        view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {}, cpuMode);
-        view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, cpuMode);
+        view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {}, gamemode);
+        view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, gamemode);
         playCardToStack();
     }
 
