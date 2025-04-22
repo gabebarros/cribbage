@@ -1,6 +1,7 @@
 package main.controller;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -13,13 +14,15 @@ public class Controller {
     private Scorer scorer;
     private int cribCount = 0;
     private boolean isPlayer1Turn = true;
+    private boolean cpuMode;
 
-    public Controller(Game game, View view) {
+    public Controller(Game game, View view, boolean cpuMode) {
         this.game = game;
         this.view = view;
         this.scorer = new Scorer();
         game.addObserver(view);
         view.setController(this);
+        this.cpuMode = cpuMode;
     }
 
     public Game getGame() {
@@ -35,23 +38,46 @@ public class Controller {
                 cribCount++;
                 playCrib();
             }
-        });
+        }, cpuMode);
 
-        view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {
-            int index = Integer.parseInt(e.getActionCommand());
-            if (cribCount >= 2 && cribCount < 4) {
-                game.addToCrib(game.getPlayer2().playCard(index));
-                cribCount++;
-                playCrib();
+        if (!cpuMode) {
+        	view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {
+                int index = Integer.parseInt(e.getActionCommand());
+                if (cribCount >= 2 && cribCount < 4) {
+                    game.addToCrib(game.getPlayer2().playCard(index));
+                    cribCount++;
+                    playCrib();
 
-                if (cribCount == 4) {
-                    game.drawStarterCard();
-                    game.setPlayer1OriginalHand(new ArrayList<Card>(game.getPlayer1().getHand()));
-                    game.setPlayer2OriginalHand(new ArrayList<Card>(game.getPlayer2().getHand()));
-                    playCardToStack();
+                    if (cribCount == 4) {
+                        game.drawStarterCard();
+                        game.setPlayer1OriginalHand(new ArrayList<Card>(game.getPlayer1().getHand()));
+                        game.setPlayer2OriginalHand(new ArrayList<Card>(game.getPlayer2().getHand()));
+                        playCardToStack();
+                    }
                 }
+            }, cpuMode);
+        }
+        else {
+        	view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), null, cpuMode);
+        	int index = new Random().nextInt(game.getPlayer2().getHand().size());
+            if (cribCount >= 2 && cribCount < 4) {
+            	new javax.swing.Timer(1000, e -> {
+            		game.addToCrib(game.getPlayer2().playCard(index));
+                    cribCount++;
+                    playCrib();
+
+                    if (cribCount == 4) {
+                        game.drawStarterCard();
+                        game.setPlayer1OriginalHand(new ArrayList<Card>(game.getPlayer1().getHand()));
+                        game.setPlayer2OriginalHand(new ArrayList<Card>(game.getPlayer2().getHand()));
+                        playCardToStack();
+                    }
+                    ((javax.swing.Timer) e.getSource()).stop();
+            	}).start();
+                
             }
-        });
+        }
+        
     }
 
     public void playCardToStack() {
@@ -67,25 +93,34 @@ public class Controller {
                 game.playCard(playedCard, game.getPlayer1());
                 isPlayer1Turn = false;
                 updateHands();
-            });
-
-            view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {});
+            }, cpuMode);
+            view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, cpuMode);
         } else {
-            view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {
-                int index = Integer.parseInt(e.getActionCommand());
-                Card playedCard = game.getPlayer2().playCard(index);
-                game.playCard(playedCard, game.getPlayer2());
-                isPlayer1Turn = true;
-                updateHands();
-            });
-
-            view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {});
+            if (cpuMode) {
+            	new javax.swing.Timer(1000, e -> {
+            		int index = new Random().nextInt(game.getPlayer2().getHand().size());
+                	Card playedCard = game.getPlayer2().playCard(index);
+                    game.playCard(playedCard, game.getPlayer2());
+                    isPlayer1Turn = true;
+                    updateHands();
+                    ((javax.swing.Timer) e.getSource()).stop();
+            	}).start(); 
+            } else {
+                view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {
+                    int index = Integer.parseInt(e.getActionCommand());
+                    Card playedCard = game.getPlayer2().playCard(index);
+                    game.playCard(playedCard, game.getPlayer2());
+                    isPlayer1Turn = true;
+                    updateHands();
+                }, cpuMode);
+                view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {}, cpuMode);
+            }
         }
     }
 
     private void updateHands() {
-        view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {});
-        view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {});
+        view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {}, cpuMode);
+        view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, cpuMode);
         playCardToStack();
     }
 
