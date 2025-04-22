@@ -91,11 +91,17 @@ public class View extends JFrame implements GameObserver {
     	} 
     }
 
-    public void updatePlayerHand(Player player, JPanel panel, ActionListener listener) {
+    public void updatePlayerHand(Player player, JPanel panel, ActionListener listener, boolean cpuMode) {
         panel.removeAll();
         int index = 0;
+        JButton b;
         for (Card c : player.getHand()) {
-            JButton b = new JButton(c.toString());
+        	if (cpuMode && game.getPlayer2() == player) {
+        		b = new JButton(" ");
+        	}
+        	else {
+        		b = new JButton(c.toString());
+        	}
             b.setActionCommand(String.valueOf(index));
             b.addActionListener(listener);
             panel.add(b);
@@ -162,7 +168,7 @@ public class View extends JFrame implements GameObserver {
         player2Panel.repaint();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { 	
         String[] options = {"Human vs Human", "Human vs CPU"};
         int mode = JOptionPane.showOptionDialog(
             null,
@@ -181,19 +187,22 @@ public class View extends JFrame implements GameObserver {
         }
 
         String player2Name;
+        boolean cpuMode;
 
         if (mode == 1) { // Human vs CPU
             player2Name = "CPU";
+            cpuMode = true;
         } else { // Human vs Human or default
             player2Name = JOptionPane.showInputDialog(null, "Enter name for Player 2:");
             if (player2Name == null || player2Name.trim().isEmpty()) {
                 player2Name = "Player 2";
             }
+            cpuMode = false;
         }
 
         game = new Game(player1Name, player2Name);
         View view = new View(player1Name, player2Name);
-        controller = new Controller(game, view);
+        controller = new Controller(game, view, cpuMode);
 
         controller.startGame();
     }
