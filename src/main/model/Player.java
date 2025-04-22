@@ -2,8 +2,9 @@ package main.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
-public class Player {
+public class Player implements CpuStrategy{
 	
 	private final String name;
 	private ArrayList<Card> hand;
@@ -53,5 +54,30 @@ public class Player {
     public void sortHand() {
     	Collections.sort(hand);
     }
+
+	@Override
+	public Card makeRandomMove() {
+		int index = new Random().nextInt(this.getHand().size());
+    	return this.playCard(index);
+		
+	}
+
+	@Override
+	public Card makeSmartMove(ArrayList<Card> playStack) {
+		Scorer s = new Scorer();
+		int optimalScore = 0;
+		int optimalIndex = new Random().nextInt(this.getHand().size());
+		
+		for (int i = 0; i < this.hand.size(); i++) {
+			playStack.add(hand.get(i));
+			if (s.scorePlayStack(playStack) > optimalScore) {
+				optimalIndex = i;
+			}
+			playStack.remove(playStack.size() - 1);
+		}
+		
+		return this.playCard(optimalIndex);
+		
+	}
 
 }

@@ -142,6 +142,8 @@ public class Game {
     	return this.dealer;
     }
 
-    
+    public ArrayList<Card> getPlayStack() {
+    	return new ArrayList<Card>(this.playStack);
+    }
 
 }
