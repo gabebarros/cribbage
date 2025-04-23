@@ -1,3 +1,8 @@
+/*
+ * Ways to score:
+ * 
+ */
+
 package main.model;
 
 import java.util.ArrayList;
@@ -29,7 +34,47 @@ public class Scorer {
 		score += (fifteens * 2);
 		
 		// count pair, 3 of a kind, 4 of a kind
+<<<<<<< Updated upstream
 		score += scoreCombinations(hand);
+=======
+		score += scoreCombinations(fullHand);
+		
+		// check for run, 1 point for each card in the run
+		score += run(fullHand);
+		
+		//check for flush
+		score += flush(startCard, fullHand);
+		
+		
+		return score;
+	}
+	
+	public int scorePlayStack(ArrayList<Card> playStack) {
+		int score = 0;
+		
+		// check if the stack's value is equal to 15
+		if (playstack_sum(playStack) == 15) {
+			score += 2;
+		}
+		
+		// check if the stack's value is equal to 31
+		if (playstack_sum(playStack) == 31) {
+			score += 2;
+		}
+		
+		// check pair/3 of a kind/ 4 of a kind
+		if (playstack_pairDoubleRoyal(playStack) == 12) {
+			score += 12;
+		}
+		else if (playstack_pairRoyal(playStack) == 6) {
+			score += 6;
+		}
+		else if (playstack_pair(playStack) == 2) {
+			score += 2;
+		}
+		
+		score += playstack_Run(playStack);
+>>>>>>> Stashed changes
 		
 		
 		return score;
@@ -93,7 +138,7 @@ public class Scorer {
 	public int run(ArrayList<Card> hand) {
 	    int score = 0;
 	    int run = 1;
-	  
+	    
 	    for (int i = 0; i < hand.size()-1; i++) {
 	    	if (hand.get(i + 1).getValue() == hand.get(i).getValue() + 1 ) {
 	    		run++;
