@@ -21,9 +21,6 @@ public class Scorer {
 		
 		int score = 0;
 		
-		// Two for his heels (2 points)
-		score += twoForHisHeels(startCard);
-		
 		// One for his knob (1 point)
 		score += oneForHisKnob(hand, startCard);
 		
@@ -33,7 +30,7 @@ public class Scorer {
 		score += (fifteens * 2);
 		
 		// count pair, 3 of a kind, 4 of a kind
-		score += scoreCombinations(hand);
+		score += scoreCombinations(fullHand);
 		
 		// check for run, 1 point for each card in the run
 		score += run(fullHand);

@@ -15,8 +15,7 @@ public class Controller {
     private int cribCount = 0;
     private boolean isPlayer1Turn = true;
     private GameMode gamemode;
-   // private boolean cpuMode;
-   // private boolean difficulty;
+    private boolean gameOver = false;
 
     public Controller(Game game, View view, GameMode gamemode) {
         this.game = game;
@@ -30,9 +29,9 @@ public class Controller {
     public Game getGame() {
         return game;
     }
-
     
     public void playCrib() {
+    	if (gameOver) return;
         view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {
             int index = Integer.parseInt(e.getActionCommand());
             if (cribCount < 2) {
@@ -52,6 +51,11 @@ public class Controller {
 
                     if (cribCount == 4) {
                         game.drawStarterCard();
+                        
+                        //two for his heels (2 points)
+                    	game.getDealer().addScore(scorer.twoForHisHeels(game.getStartCard()));
+                    	game.updateScore();
+                        
                         game.setPlayer1OriginalHand(new ArrayList<Card>(game.getPlayer1().getHand()));
                         game.setPlayer2OriginalHand(new ArrayList<Card>(game.getPlayer2().getHand()));
                         playCardToStack();
@@ -83,6 +87,7 @@ public class Controller {
     }
 
     public void playCardToStack() {
+    	if (gameOver) return;
         if (game.getPlayer1().getHand().isEmpty() && game.getPlayer2().getHand().isEmpty()) {
             showPhase();
             return;
@@ -100,8 +105,6 @@ public class Controller {
         } else {
             if (gamemode == GameMode.CPU_EASY || gamemode == GameMode.CPU_HARD) {
             	new javax.swing.Timer(1000, e -> {
-            		//int index = new Random().nextInt(game.getPlayer2().getHand().size());
-                	//Card playedCard = game.getPlayer2().playCard(index);
             		Card playedCard = game.getPlayer2().makeSmartMove(game.getPlayStack());
                     game.playCard(playedCard, game.getPlayer2());
                     isPlayer1Turn = true;
@@ -132,9 +135,11 @@ public class Controller {
     	game.setDealer(game.getPlayer2());
     	view.updateDealerIndicator(game.getPlayer2());
         startRound();
+        setGameOver(false);
     }
 
     private void startRound() {
+    	if (gameOver) return;
         // Reset state
         cribCount = 0;
         isPlayer1Turn = true;
@@ -151,6 +156,8 @@ public class Controller {
     }
 
     public void showPhase() {
+    	//if (gameOver) return;
+    	
         Card startCard = game.getStartCard();
 
         // Score each player's hand using copies
@@ -167,9 +174,10 @@ public class Controller {
         else {
         	game.getPlayer1().addScore(cribPoints);
         }
-        
 
         game.updateScore();
+        
+        if (gameOver) return;
 
         JOptionPane.showMessageDialog(null,
             "Show Phase:\n\n" +
@@ -192,16 +200,6 @@ public class Controller {
         view.onCribUpdated();
         view.updateStarterCard(null);
 
-        // Check win condition
-        if (game.getPlayer1().getScore() >= 121 || game.getPlayer2().getScore() >= 121) {
-            String winner = game.getPlayer1().getScore() >= 121 ? game.getPlayer1().getName() : game.getPlayer2().getName();
-            JOptionPane.showMessageDialog(null,
-                winner + " wins the game!",
-                "Game Over",
-                JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-
         if (game.getDealer() == game.getPlayer2()) {
         	game.setDealer(game.getPlayer1());
         	view.updateDealerIndicator(game.getPlayer1());
@@ -214,4 +212,13 @@ public class Controller {
         // Start next round
         startRound();
     }
+    
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
 }
