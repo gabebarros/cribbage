@@ -20,8 +20,10 @@ public class View extends JFrame implements GameObserver {
     private JPanel scorePanel = new JPanel();
     private JLabel player1ScoreLabel;
     private JLabel player2ScoreLabel;
-    
     private JPanel playAreaPanel = new JPanel();
+    private final JPanel playCardsPanel = new JPanel();  // holds buttons only
+    
+    private JLabel playStackTotalLabel = new JLabel("Total Value: 0");
 
     public View(String p1, String p2) {
         setTitle("Cribbage");
@@ -41,7 +43,9 @@ public class View extends JFrame implements GameObserver {
         add(cribPanel, BorderLayout.CENTER);
 
         // Starter card label
-        starterCardLabel.setAlignmentX(Component.CENTER_ALIGNMENT);  // Center horizontally
+        starterCardLabel.setAlignmentX(Component.CENTER_ALIGNMENT);  // Aligns component in BoxLayout
+        starterCardLabel.setHorizontalAlignment(SwingConstants.CENTER); // Aligns text inside label
+        starterCardLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, starterCardLabel.getPreferredSize().height)); // Allows stretching
         cribPanel.add(starterCardLabel);
 
         // Crib cards section
@@ -58,8 +62,18 @@ public class View extends JFrame implements GameObserver {
 
         // Play area section
         playAreaPanel.setBorder(BorderFactory.createTitledBorder("Play Stack"));
-        playAreaPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        playAreaPanel.setLayout(new BoxLayout(playAreaPanel, BoxLayout.Y_AXIS));
         playAreaPanel.setPreferredSize(new Dimension(600, 150));
+
+        // Set up the label
+        playStackTotalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        playAreaPanel.add(playStackTotalLabel);
+
+        // Set up the card buttons panel
+        playCardsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        playAreaPanel.add(playCardsPanel);
+
+        // Add to cribPanel
         cribPanel.add(playAreaPanel);
 
         // Score panel
@@ -135,14 +149,19 @@ public class View extends JFrame implements GameObserver {
     
     @Override
     public void onPlayStackUpdated(ArrayList<Card> playStack) {
-        // Clear the play area and redraw all cards in the play stack
-        playAreaPanel.removeAll();
+        playCardsPanel.removeAll();
+
+        int total = 0;
         for (Card card : playStack) {
-            JButton cardButton = new JButton(card.toString()); // or use an image
-            playAreaPanel.add(cardButton);
+            total += card.getValue(); // Make sure this uses correct Cribbage logic
+            JButton cardButton = new JButton(card.toString());
+            playCardsPanel.add(cardButton);
         }
-        playAreaPanel.revalidate();
-        playAreaPanel.repaint();
+
+        playStackTotalLabel.setText("Play Stack Total: " + total);
+
+        playCardsPanel.revalidate();
+        playCardsPanel.repaint();
     }
     
     @Override
