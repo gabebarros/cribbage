@@ -1,6 +1,8 @@
 package main.view;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,7 +26,11 @@ public class View extends JFrame implements GameObserver {
     private final JPanel playCardsPanel = new JPanel();  // holds buttons only
     
     private JLabel playStackTotalLabel = new JLabel("Total Value: 0");
+    
+    private JPanel winsCornerPanel;
+    private JLabel winsDisplayLabel;
 
+    
     public View(String p1, String p2) {
         setTitle("Cribbage");
         setSize(1300, 900);
@@ -46,6 +52,27 @@ public class View extends JFrame implements GameObserver {
         starterCardLabel.setAlignmentX(Component.CENTER_ALIGNMENT);  // Aligns component in BoxLayout
         starterCardLabel.setHorizontalAlignment(SwingConstants.CENTER); // Aligns text inside label
         starterCardLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, starterCardLabel.getPreferredSize().height)); // Allows stretching
+        
+     // Top container for wins corner + starter label
+        JPanel topCribHeader = new JPanel(new BorderLayout());
+        topCribHeader.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));  // Limits height
+
+        // Wins corner panel (right side of play area)
+        winsCornerPanel = new JPanel();
+        winsDisplayLabel = new JLabel("Wins - " + game.getPlayer1().getName() + ": 0, " + game.getPlayer2().getName() + ": 0");
+        winsCornerPanel.add(winsDisplayLabel);
+        topCribHeader.add(winsCornerPanel, BorderLayout.EAST);
+
+        // Optional: spacer to the left
+        topCribHeader.add(Box.createHorizontalStrut(10), BorderLayout.WEST);
+
+        // Starter label centered
+        topCribHeader.add(starterCardLabel, BorderLayout.CENTER);
+
+        // Add header panel to cribPanel
+        cribPanel.add(topCribHeader);
+
+        
         cribPanel.add(starterCardLabel);
 
         // Crib cards section
@@ -176,6 +203,17 @@ public class View extends JFrame implements GameObserver {
                 ? game.getPlayer1().getName()
                 : game.getPlayer2().getName();
 
+            // Increment the winner's win count
+            if (winner.equals(game.getPlayer1().getName())) {
+                game.incrementPlayer1Wins();
+            } else {
+                game.incrementPlayer2Wins();
+            }
+            
+            winsDisplayLabel.setText("Wins - " + game.getPlayer1().getName() + ": " + game.getPlayer1Wins() + ", "
+            + game.getPlayer2().getName() + ": " + game.getPlayer2Wins());
+
+
             JOptionPane.showMessageDialog(
                 null,
                 winner + " wins the game!",
@@ -204,6 +242,7 @@ public class View extends JFrame implements GameObserver {
             }
         }
     }
+
     
     public void updateDealerIndicator(Player dealer) {
         String p1Title = controller.getGame().getPlayer1().getName();

@@ -16,6 +16,8 @@ public class Game {
     private ArrayList<Card> player1OriginalHand;
     private ArrayList<Card> player2OriginalHand;
     private Player dealer;
+    private int player1Wins = 0;
+    private int player2Wins = 0;
     
     private List<GameObserver> observers = new ArrayList<>();
 
@@ -156,6 +158,22 @@ public class Game {
 
     public ArrayList<Card> getPlayStack() {
     	return new ArrayList<Card>(this.playStack);
+    }
+    
+    public int getPlayer1Wins() { 
+    	return player1Wins;
+    }
+    
+    public int getPlayer2Wins() { 
+    	return player2Wins;
+    }
+    
+    public void incrementPlayer1Wins() {
+        player1Wins++;
+    }
+
+    public void incrementPlayer2Wins() {
+        player2Wins++;
     }
 
 }
