@@ -339,5 +339,9 @@ public class View extends JFrame implements GameObserver {
 		turnLabel.setText(p2Name + "'s Turn!");
 	}
 
+<<<<<<< Updated upstream
+}
+>>>>>>> Stashed changes
+=======
 }
 >>>>>>> Stashed changes
