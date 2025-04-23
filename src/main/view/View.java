@@ -336,4 +336,23 @@ public class View extends JFrame implements GameObserver {
 		turnLabel.setText(p2Name + "'s turn!");
 	}
 
+	public void showSummary(Card startCard, int p1Points, int p2Points, int cribPoints) {
+		JOptionPane.showMessageDialog(null,
+	            "Show Phase:\n\n" +
+	            game.getPlayer1().getName() + "'s hand: " + game.getPlayer1OriginalHand() + "\n" +
+	            "Starter: " + startCard + "\n" +
+	            "Points: " + p1Points + "\n\n" +
+
+	            game.getPlayer2().getName() + "'s hand: " + game.getPlayer2OriginalHand() + "\n" +
+	            "Starter: " + startCard + "\n" +
+	            "Points: " + p2Points + "\n\n" +
+
+	            "Crib: " + game.getCrib() + "\n" +
+	            "Starter: " + startCard + "\n" +
+	            "Crib Points: " + cribPoints,
+	            "Show Phase",
+	            JOptionPane.INFORMATION_MESSAGE
+	        );
+	}
+
 }

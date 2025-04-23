@@ -1,3 +1,8 @@
+/*
+ * Functionality: This class serves as a "middleman" between the model and the view, recieving updates
+ * 		from the model, and in turn, updating the view.
+ */
+
 package main.controller;
 
 import java.util.ArrayList;
@@ -12,28 +17,47 @@ public class Controller {
     private Game game;
     private View view;
     private Scorer scorer;
+    
     private int cribCount = 0;
     private boolean isPlayer1Turn = true;
     private GameMode gamemode;
     private boolean gameOver = false;
 
+    /*
+     * The constructor, which sets the instances of game and view as well as selecting the gamemode, then
+     * 		adds the observer and sets the view's controller to this class instance. 
+     *  @param game:
+     *  	a game instance, representing the data of the game being played
+     *  @param view:
+     *  	a view instance, representing the frontend of the game being played
+     *  @param gamemode:
+     *  	an enum value of either PVP, CPU_EASY, or CPU_Hard, used for game logic
+     *  
+     */
     public Controller(Game game, View view, GameMode gamemode) {
         this.game = game;
         this.view = view;
         this.scorer = new Scorer();
-        game.addObserver(view);
-        view.setController(this);
+        game.addObserver(view); //middleman functionality, View class serves as an observer
+        view.setController(this); 
         this.gamemode = gamemode;
     }
 
+    // Standard Getter method
     public Game getGame() {
         return game;
     }
     
+    /*
+     * Method for playing to the crib, with different logic based on the gamemode. Performs actions on the model and view. 
+     */
     public void playCrib() {
-    	if (gameOver) return;
+    	if (gameOver) return; //if game is over, then nothing should happen
+    	
+    	//update player1 hand no matter what, because there must be at least 1 player
         view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {
             int index = Integer.parseInt(e.getActionCommand());
+            //logic to ensure player plays 2 cards to crib
             if (cribCount < 2) {
                 game.addToCrib(game.getPlayer1().playCard(index));
                 cribCount++;
@@ -41,12 +65,15 @@ public class Controller {
             }
         }, gamemode);
 
+        // if pvp, then player 2 has the same logic as player 1
         if (gamemode == GameMode.PVP) {
+        	//update player hand
         	view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {
                 int index = Integer.parseInt(e.getActionCommand());
-                if (cribCount >= 2 && cribCount < 4) {
+                if (cribCount >= 2 && cribCount < 4) { //checks that enough cards have been played
                     game.addToCrib(game.getPlayer2().playCard(index));
                     cribCount++;
+                    //call again if another card must be played 
                     playCrib();
 
                     if (cribCount == 4) {
@@ -54,7 +81,7 @@ public class Controller {
                         
                         //two for his heels (2 points)
                     	game.getDealer().addScore(scorer.twoForHisHeels(game.getStartCard()));
-                    	game.updateScore();
+                    	game.updateScore(); 
                         
                         game.setPlayer1OriginalHand(new ArrayList<Card>(game.getPlayer1().getHand()));
                         game.setPlayer2OriginalHand(new ArrayList<Card>(game.getPlayer2().getHand()));
@@ -64,21 +91,24 @@ public class Controller {
             }, gamemode);
         }
         else {
+        	// pve modes, with the same logic because difficulty is irrelevant here
         	view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), null, gamemode);
         	int index = new Random().nextInt(game.getPlayer2().getHand().size());
             if (cribCount >= 2 && cribCount < 4) {
-            	new javax.swing.Timer(1000, e -> {
-            		game.addToCrib(game.getPlayer2().playCard(index));
+            	new javax.swing.Timer(1000, e -> { //timer for cpu to make moves
+            		game.addToCrib(game.getPlayer2().playCard(index)); //add random card to crib
                     cribCount++;
+                    //play again if necessary
                     playCrib();
 
                     if (cribCount == 4) {
+                    	//after crib plays
                         game.drawStarterCard();
                         game.setPlayer1OriginalHand(new ArrayList<Card>(game.getPlayer1().getHand()));
                         game.setPlayer2OriginalHand(new ArrayList<Card>(game.getPlayer2().getHand()));
                         playCardToStack();
                     }
-                    ((javax.swing.Timer) e.getSource()).stop();
+                    ((javax.swing.Timer) e.getSource()).stop(); //timer stop
             	}).start();
                 
             }
@@ -126,20 +156,30 @@ public class Controller {
         }
     }
 
+    /*
+     * method for updating the hands of both players. Gamemode irrelevant
+     */
     private void updateHands() {
         view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {}, gamemode);
         view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, gamemode);
+        //after hand update, it becomes time for a player to make a move
         playCardToStack();
     }
 
+    /*
+     * method to start the game, gamemode irrelevant
+     */
     public void startGame() {
         // Kick off the first round
-    	game.setDealer(game.getPlayer2());
+    	game.setDealer(game.getPlayer2()); // player2 is dealer by default
     	view.updateDealerIndicator(game.getPlayer2());
+    	setGameOver(false); //obviously, the game isn't over when it starts
         startRound();
-        setGameOver(false);
     }
 
+    /*
+     * method to start a round, gamemode irrlevant
+     */
     private void startRound() {
     	if (gameOver) return;
         // Reset state
@@ -157,9 +197,8 @@ public class Controller {
         playCrib();
     }
 
+    //method for updating scores and displaying round summary
     public void showPhase() {
-    	//if (gameOver) return;
-    	
         Card startCard = game.getStartCard();
 
         // Score each player's hand using copies
@@ -167,6 +206,7 @@ public class Controller {
         int p2Points = scorer.scoreHand(game.getPlayer2OriginalHand(), startCard);
         int cribPoints = scorer.scoreHand(game.getCrib(), startCard);
 
+        //update scores in model
         game.getPlayer1().addScore(p1Points);
         game.getPlayer2().addScore(p2Points);
         
@@ -177,31 +217,20 @@ public class Controller {
         	game.getPlayer1().addScore(cribPoints);
         }
 
+        //finish updates
         game.updateScore();
         
         if (gameOver) return;
 
-        JOptionPane.showMessageDialog(null,
-            "Show Phase:\n\n" +
-            game.getPlayer1().getName() + "'s hand: " + game.getPlayer1OriginalHand() + "\n" +
-            "Starter: " + startCard + "\n" +
-            "Points: " + p1Points + "\n\n" +
-
-            game.getPlayer2().getName() + "'s hand: " + game.getPlayer2OriginalHand() + "\n" +
-            "Starter: " + startCard + "\n" +
-            "Points: " + p2Points + "\n\n" +
-
-            "Crib: " + game.getCrib() + "\n" +
-            "Starter: " + startCard + "\n" +
-            "Crib Points: " + cribPoints,
-            "Show Phase",
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        // end of round summary
+        view.showSummary(startCard, p1Points, p2Points, cribPoints);
         
+        // reset
         game.resetForNewRound();
         view.onCribUpdated();
         view.updateStarterCard(null);
 
+        //switch dealers
         if (game.getDealer() == game.getPlayer2()) {
         	game.setDealer(game.getPlayer1());
         	view.updateDealerIndicator(game.getPlayer1());
@@ -215,10 +244,12 @@ public class Controller {
         startRound();
     }
     
+    //Standard getter
     public boolean isGameOver() {
         return gameOver;
     }
 
+    //Standard setter
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
