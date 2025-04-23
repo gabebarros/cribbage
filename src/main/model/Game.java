@@ -63,22 +63,22 @@ public class Game {
 
     //Standard getter
     public Player getPlayer1() { 
-    	return player1;
+    	return player1; //necessary reference
     }
     
     //Standard getter
     public Player getPlayer2() { 
-    	return player2;
+    	return player2; //necessary reference
     }
     
     //Standard getter
     public ArrayList<Card> getCrib() {
-    	return crib;
+    	return new ArrayList<Card>(crib); //eliminated reference
     }
     
     //Standard getter
     public Card getStartCard() {
-    	return startCard; 
+    	return startCard; //necessary reference
     }
 
     /*
@@ -218,7 +218,7 @@ public class Game {
     
     //Standard getter
     public Player getDealer() {
-    	return this.dealer;
+    	return this.dealer; //necessary reference
     }
 
     //Standard getter
