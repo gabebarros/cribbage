@@ -1,6 +1,8 @@
 /*
  * Functionality: This class serves as a "middleman" between the model and the view, recieving updates
  * 		from the model, and in turn, updating the view.
+ * 
+ * Notes: Comments fully added + all view logic moved to view - Lucas
  */
 
 package main.controller;
