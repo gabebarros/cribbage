@@ -1,26 +1,31 @@
 package main.controller;
-/*
- * goals: recieve updates from the model, update the view. simple. 
- * use observer pattern would be good approach imo - Lucas
- */
 
-import main.controller.Observer;
-import main.model.Game;
+import java.util.ArrayList;
+import java.util.Random;
+
+import javax.swing.JOptionPane;
+
+import main.model.*;
+import main.view.View;
 
 public class Controller {
-	private Game game;
+    private Game game;
+    private View view;
+    private Scorer scorer;
+    private int cribCount = 0;
+    private boolean isPlayer1Turn = true;
+    private GameMode gamemode;
+    private boolean gameOver = false;
 
-	public Controller(Game g) {
-		this.game = g;
-	}
-	
-	public void addObserver(Observer observer) {
-		game.registerObserver(observer);
-	}
+    public Controller(Game game, View view, GameMode gamemode) {
+        this.game = game;
+        this.view = view;
+        this.scorer = new Scorer();
+        game.addObserver(view);
+        view.setController(this);
+        this.gamemode = gamemode;
+    }
 
-<<<<<<< Updated upstream
-}
-=======
     public Game getGame() {
         return game;
     }
@@ -89,7 +94,6 @@ public class Controller {
         }
 
         if (isPlayer1Turn) {
-        	view.player1Turn();
             view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {
                 int index = Integer.parseInt(e.getActionCommand());
                 Card playedCard = game.getPlayer1().playCard(index);
@@ -99,7 +103,6 @@ public class Controller {
             }, gamemode);
             view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, gamemode);
         } else {
-        	view.player2Turn();
             if (gamemode == GameMode.CPU_EASY || gamemode == GameMode.CPU_HARD) {
             	new javax.swing.Timer(1000, e -> {
             		Card playedCard = game.getPlayer2().makeSmartMove(game.getPlayStack());
@@ -219,4 +222,3 @@ public class Controller {
     }
 
 }
->>>>>>> Stashed changes
