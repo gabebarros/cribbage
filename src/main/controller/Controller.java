@@ -94,6 +94,7 @@ public class Controller {
         }
 
         if (isPlayer1Turn) {
+        	view.player1Turn();
             view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {
                 int index = Integer.parseInt(e.getActionCommand());
                 Card playedCard = game.getPlayer1().playCard(index);
@@ -103,6 +104,7 @@ public class Controller {
             }, gamemode);
             view.updatePlayerHand(game.getPlayer2(), view.getPlayer2Panel(), e -> {}, gamemode);
         } else {
+        	view.player2Turn();
             if (gamemode == GameMode.CPU_EASY || gamemode == GameMode.CPU_HARD) {
             	new javax.swing.Timer(1000, e -> {
             		Card playedCard = game.getPlayer2().makeSmartMove(game.getPlayStack());

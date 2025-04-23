@@ -35,6 +35,9 @@ public class Scorer {
 		// check for run, 1 point for each card in the run
 		score += run(fullHand);
 		
+		//check for flush
+		score += flush(startCard, fullHand);
+		
 		
 		return score;
 	}
@@ -134,7 +137,7 @@ public class Scorer {
 	public int run(ArrayList<Card> hand) {
 	    int score = 0;
 	    int run = 1;
-	  
+	    
 	    for (int i = 0; i < hand.size()-1; i++) {
 	    	if (hand.get(i + 1).getRank().getObjectiveValue() == hand.get(i).getRank().getObjectiveValue() + 1 ) {
 	    		run++;

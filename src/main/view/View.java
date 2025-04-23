@@ -25,6 +25,11 @@ public class View extends JFrame implements GameObserver {
     private JPanel playAreaPanel = new JPanel();
     private final JPanel playCardsPanel = new JPanel();  // holds buttons only
     
+    //turn indicator atts
+    private JLabel turnLabel = new JLabel("");
+    private String p1Name;
+    private String p2Name;
+    
     private JLabel playStackTotalLabel = new JLabel("Total Value: 0");
     
     private JPanel winsCornerPanel;
@@ -32,6 +37,9 @@ public class View extends JFrame implements GameObserver {
 
     
     public View(String p1, String p2) {
+    	p1Name = p1;
+    	p2Name = p2;
+    	
         setTitle("Cribbage");
         setSize(1300, 900);
         setLayout(new BorderLayout());
@@ -118,6 +126,9 @@ public class View extends JFrame implements GameObserver {
         scorePanel.add(player2ScoreLabel, gbc);
 
         cribPanel.add(scorePanel);  // Now at the bottom of the stacked crib panel
+        
+        playAreaPanel.add(turnLabel);
+        turnLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -316,5 +327,13 @@ public class View extends JFrame implements GameObserver {
 
         controller.startGame();
     }
+
+	public void player1Turn() {
+		turnLabel.setText(p1Name + "'s turn!");
+	}
+
+	public void player2Turn() {
+		turnLabel.setText(p2Name + "'s turn!");
+	}
 
 }
