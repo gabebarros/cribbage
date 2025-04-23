@@ -1,3 +1,7 @@
+/*
+ * Functionality:
+ * 		class for scoring, which awards points to players
+ */
 package main.model;
 
 import java.util.ArrayList;
@@ -7,17 +11,20 @@ import java.util.List;
 
 public class Scorer {
 
-	public Scorer() {
-		
-	}
+	//empty constructor. no atts to set.
+	public Scorer() {}
 	
+	/*
+	 * method to assess the value of any hand
+	 * @param hand:
+	 * 		the hand in question
+	 * @param startCard:
+	 * 		the startcard
+	 */
 	public int scoreHand(ArrayList<Card> hand, Card startCard) {
-		ArrayList<Card> fullHand = new ArrayList<Card>();
-		for (Card c : hand) {
-			fullHand.add(c);
-		}
-		fullHand.add(startCard);
-		Collections.sort(fullHand);
+		ArrayList<Card> fullHand = new ArrayList<Card>(hand);
+		fullHand.add(startCard); //add startcard to hand
+		Collections.sort(fullHand); //sort for score checks
 		
 		int score = 0;
 		
@@ -38,10 +45,15 @@ public class Scorer {
 		//check for flush
 		score += flush(startCard, fullHand);
 		
-		
+		//return total
 		return score;
 	}
 	
+	/*
+	 * method to check playstack for unique combinations worth points
+	 * @param playStack:
+	 * 		the stack to be analyzed.
+	 */
 	public int scorePlayStack(ArrayList<Card> playStack) {
 		int score = 0;
 		
@@ -59,42 +71,68 @@ public class Scorer {
 		if (playstack_pairDoubleRoyal(playStack) == 12) {
 			score += 12;
 		}
+		//check for royal pair
 		else if (playstack_pairRoyal(playStack) == 6) {
 			score += 6;
 		}
+		//check for other pairs
 		else if (playstack_pair(playStack) == 2) {
 			score += 2;
 		}
 		
+		//check for runs
 		score += playstack_Run(playStack);
 		
-		
+		//return total
 		return score;
 	}
 	
+	/*
+	 * check for oneForHisKnob scoring method
+	 * @param hand:
+	 * 		hand to analyze
+	 * @param startCard:
+	 * 		starting card
+	 */
 	public int oneForHisKnob(ArrayList<Card> hand, Card startCard) {
 		for (Card c : hand) {
-			if (c.getRank().equals(Rank.JACK) && c.getSuit().equals(startCard.getSuit())) {
+			if (c.getRank().equals(Rank.JACK) && c.getSuit().equals(startCard.getSuit())) { //one for his knob!
 				return 1;
 			}
 		}
 		return 0;
 	}
 	
+	/*
+	 * method to check for twoForHisHeels scoring method.
+	 * @param startCard:
+	 * 		starting card
+	 */
 	public int twoForHisHeels(Card startCard) {
 		if (startCard.getRank().equals(Rank.JACK)) {
-			return 2;
+			return 2; //two for his heels!
 		}
 		return 0;
 		
 	}
 
+	/*
+	 * check for any combinations of cards equalling 15. recursive
+	 * @param cards:
+	 * 		cards to check
+	 * @param index:
+	 * 		index to start from
+	 * @param currentSum:
+	 * 		current sum of card values
+	 */
 	public int countFifteens(ArrayList<Card> cards, int index, int currentSum) {
+		//points if true
 		if (currentSum == 15) {
 			return 1;
 		}
+		//base case
 		if (index == cards.size() || currentSum > 15) {
-			return 0;
+			return 0; 
 		}
 
 		int curVal = cards.get(index).getValue();  // value of the current card
@@ -104,6 +142,11 @@ public class Scorer {
 		       countFifteens(cards, index + 1, currentSum);
 	}
 	
+	/*
+	 * method for scoring possible combinations of cards
+	 * @param hand:
+	 * 		hand to analyze
+	 */
 	public int scoreCombinations(ArrayList<Card> hand) {
 	    int score = 0;
 	    HashMap<Rank, Integer> counts = new HashMap<>();
@@ -133,30 +176,43 @@ public class Scorer {
 	    return score;
 	}
 	
-	// hand must be sorted before calling
+	/*
+	 * method to check for runs in a hand
+	 * @param hand:
+	 * 		hand to analyze
+	 */
 	public int run(ArrayList<Card> hand) {
 	    int score = 0;
 	    int run = 1;
 	    
 	    for (int i = 0; i < hand.size()-1; i++) {
-	    	if (hand.get(i + 1).getRank().getObjectiveValue() == hand.get(i).getRank().getObjectiveValue() + 1 ) {
+	    	if (hand.get(i + 1).getRank().getObjectiveValue() == hand.get(i).getRank().getObjectiveValue() + 1 ) { //increase run if next card is next ordinal
 	    		run++;
 	    	}
 	    	else {
-	    		run = 1;
+	    		run = 1; //reset run
 	    	}
 	    	
-	    	if (run == 3 || run == 4 || run == 5) {
+	    	if (run == 3 || run == 4 || run == 5) { //triple, quadruple, pentuple runs
 	    		score = run;
 	    	}
 	    }
 	    
+	    //return points to award
 	    return score;
 	}
 	
+	/*
+	 * method to check for a flush in a hand
+	 * @param startCard:
+	 * 		the starting card
+	 * @param hand:
+	 * 		hand to analyze
+	 */
 	public int flush(Card startCard, ArrayList<Card> hand) {
 		int score = 0;
 		
+		//flush checks
 		if (hand.get(0).getSuit() == hand.get(1).getSuit() &&
 			hand.get(1).getSuit() == hand.get(2).getSuit() &&
 			hand.get(2).getSuit() == hand.get(3).getSuit()) {
@@ -166,59 +222,97 @@ public class Scorer {
 			}
 		}
 		
+		//return points to award
 		return score;
 	}
 	
+	/*
+	 * method to check for total sum of playStack
+	 * @param playStack:
+	 * 		playStack, the stack of cards in play
+	 */
 	public int playstack_sum(ArrayList<Card> playStack) {
 		int total = 0;
 		
+		//sum all cards in stack
 		for (Card c : playStack) {
 			total += c.getValue();
 		}
 		
+		//return total
 		return total;
 	}
 	
+	/*
+	 * method to check for pair in playStack
+	 * @param playStack:
+	 * 		playStack to analyze
+	 */
 	public int playstack_pair(ArrayList<Card> playStack) {
+		//check if impossible
 		if (playStack.size() < 2) {
 			return 0;
 		}
 		
+		//check for pair
 		if (playStack.get(playStack.size()-1).getRank() == playStack.get(playStack.size()-2).getRank()) {
 			return 2;
 		}
 		
+		//zero otherwise
 		return 0;
 	}
 	
+	/*
+	 * method for checking if playstack contains a royal pair
+	 * @param playStack:
+	 * 		playStack to analyze
+	 */
 	public int playstack_pairRoyal(ArrayList<Card> playStack) {
+		//check for impossible
 		if (playStack.size() < 3) {
 			return 0;
 		}
 		
+		//check for pair
 		if (playStack.get(playStack.size()-1).getRank() == playStack.get(playStack.size()-2).getRank() &&
 			playStack.get(playStack.size()-2).getRank() == playStack.get(playStack.size()-3).getRank()) {
 			return 6;
 		}
 		
+		//zero otherwise
 		return 0;
 	}
 	
+	/*
+	 * method for checking for double royal pair
+	 * @param playStack:
+	 * 		playStack to analyze
+	 */
 	public int playstack_pairDoubleRoyal(ArrayList<Card> playStack) {
+		//check for impossible
 		if (playStack.size() < 4) {
 			return 0;
 		}
 		
+		//check for pair
 		if (playStack.get(playStack.size()-1).getRank() == playStack.get(playStack.size()-2).getRank() &&
 			playStack.get(playStack.size()-2).getRank() == playStack.get(playStack.size()-3).getRank() &&
 			playStack.get(playStack.size()-3).getRank() == playStack.get(playStack.size()-4).getRank()){
 			return 12;
 		}
 		
+		//zero points otherwise
 		return 0;
 	}
 	
+	/*
+	 * method for checking for a run on the playStack
+	 * @param playStack:
+	 * 		playStack to analyze
+	 */
 	public int playstack_Run(ArrayList<Card> playStack) {
+		//check for impossible
 		if (playStack.size() < 3) {
 			return 0;
 		}
@@ -229,6 +323,7 @@ public class Scorer {
 	    for (int curRun = 3; curRun <= playStack.size(); curRun++) {
 	        List<Card> subList = playStack.subList(playStack.size() - curRun, playStack.size());
 
+	        //check if valid
 	        if (playstack_RunHelper(subList)) {
 	            maxRun = curRun;
 	        }
@@ -240,8 +335,14 @@ public class Scorer {
 	    return maxRun;
 	}
 	
+	/*
+	 * method for checking validity of a run, eliminates duplicates
+	 * @param cards:
+	 * 		card list to analyze
+	 */
 	private boolean playstack_RunHelper(List<Card> cards) {
 	    HashMap<Integer, Integer> map = new HashMap<>();
+	    //check if run is in table
 	    for (Card c : cards) {
 	        int value = c.getRank().getObjectiveValue();
 	        
