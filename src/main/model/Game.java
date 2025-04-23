@@ -114,6 +114,10 @@ public class Game {
     		}
     	}
     	
+    	if (scorer.playstack_sum(playStack) == 31) {
+    		playStack.clear();
+    	}
+    	
         playStack.add(card);
         int score = scorer.scorePlayStack(playStack);
         player.addScore(score);
