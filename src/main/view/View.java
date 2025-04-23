@@ -1,7 +1,11 @@
+/*
+ * Functionality: the visual interface for the game, including only visual logic for the most part
+ * *AI USED*
+ */
+
 package main.view;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -11,42 +15,60 @@ import main.controller.Controller;
 import main.model.*;
 
 public class View extends JFrame implements GameObserver {
+	
 	private static Controller controller;
 	private static Game game;
 	
+	// Panels
     private JPanel player1Panel = new JPanel();
     private JPanel player2Panel = new JPanel();
     private JPanel cribPanel = new JPanel();
     private JPanel cribCardsPanel = new JPanel();
-    private JLabel starterCardLabel = new JLabel();
     private JPanel scorePanel = new JPanel();
-    private JLabel player1ScoreLabel;
-    private JLabel player2ScoreLabel;
     private JPanel playAreaPanel = new JPanel();
     private final JPanel playCardsPanel = new JPanel();  // holds buttons only
-    
-    private JLabel playStackTotalLabel = new JLabel("Total Value: 0");
-    
     private JPanel winsCornerPanel;
+    
+    // score labels
+    private JLabel player1ScoreLabel;
+    private JLabel player2ScoreLabel;
+    
+    //turn indicator atts
+    private JLabel turnLabel = new JLabel();
+    private String p1Name;
+    private String p2Name;
+    
+    //other labels
+    private JLabel playStackTotalLabel = new JLabel("Total Value: 0");
+    private JLabel starterCardLabel = new JLabel();    
     private JLabel winsDisplayLabel;
 
-    
+    /*
+     * The constructor, taking the names of both players for display
+     * @Param p1:
+     * 		name of player 1
+     * @Param p2:
+     * 		name of player 2
+     */
     public View(String p1, String p2) {
+    	p1Name = p1;
+    	p2Name = p2;
+    	
         setTitle("Cribbage");
-        setSize(1300, 900);
+        setSize(1280, 720); //basic dimensions for video resolution, fits screen without maximization
         setLayout(new BorderLayout());
 
         // Player hands
         player1Panel.setBorder(BorderFactory.createTitledBorder(p1));
-        add(player1Panel, BorderLayout.SOUTH);
+        add(player1Panel, BorderLayout.SOUTH); //plant at bottom
 
         player2Panel.setBorder(BorderFactory.createTitledBorder(p2));
-        add(player2Panel, BorderLayout.NORTH);
+        add(player2Panel, BorderLayout.NORTH); //plant at top
 
         // Crib panel in center (will now hold starter, crib, play area, and scores)
         cribPanel.setBorder(BorderFactory.createTitledBorder("Play Area"));
         cribPanel.setLayout(new BoxLayout(cribPanel, BoxLayout.Y_AXIS));  // Stack vertically
-        add(cribPanel, BorderLayout.CENTER);
+        add(cribPanel, BorderLayout.CENTER); //plant in middle
 
         // Starter card label
         starterCardLabel.setAlignmentX(Component.CENTER_ALIGNMENT);  // Aligns component in BoxLayout
@@ -61,7 +83,7 @@ public class View extends JFrame implements GameObserver {
         winsCornerPanel = new JPanel();
         winsDisplayLabel = new JLabel("Wins - " + game.getPlayer1().getName() + ": 0, " + game.getPlayer2().getName() + ": 0");
         winsCornerPanel.add(winsDisplayLabel);
-        topCribHeader.add(winsCornerPanel, BorderLayout.EAST);
+        topCribHeader.add(winsCornerPanel, BorderLayout.EAST); //plant on right
 
         // Optional: spacer to the left
         topCribHeader.add(Box.createHorizontalStrut(10), BorderLayout.WEST);
@@ -71,20 +93,19 @@ public class View extends JFrame implements GameObserver {
 
         // Add header panel to cribPanel
         cribPanel.add(topCribHeader);
-
-        
         cribPanel.add(starterCardLabel);
 
         // Crib cards section
         JPanel cribContainer = new JPanel();
         cribContainer.setLayout(new BorderLayout());
 
+        //add crib label
         JLabel cribLabel = new JLabel("Crib:", SwingConstants.CENTER);
-        cribContainer.add(cribLabel, BorderLayout.NORTH);
+        cribContainer.add(cribLabel, BorderLayout.NORTH); //plant in center of cribContainer
 
+        //crib card display
         cribCardsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         cribContainer.add(cribCardsPanel, BorderLayout.CENTER);
-
         cribPanel.add(cribContainer);
 
         // Play area section
@@ -118,13 +139,22 @@ public class View extends JFrame implements GameObserver {
         scorePanel.add(player2ScoreLabel, gbc);
 
         cribPanel.add(scorePanel);  // Now at the bottom of the stacked crib panel
+        
+        //add turn indicator
+        playAreaPanel.add(turnLabel);
+        turnLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        //set to terminate on close and make visible once all has been done
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
+    /* method to update starter card
+     * @param: card
+     * 		a card, the starter card to be specific
+     */
     public void updateStarterCard(Card card) {
-    	if (card == null) {
+    	if (card == null) { //null check
     		starterCardLabel.setText(null);
     	}
     	else {
@@ -132,76 +162,121 @@ public class View extends JFrame implements GameObserver {
     	} 
     }
 
+    /*
+     * method for updating the visual player hand
+     * @param player:
+     * 		which player needs updating
+     * @param panel: 
+     * 		the player's panel
+     * @listener:
+     * 		the listner
+     * @gamemode:
+     * 		gamemode, self-explanatory.
+     */
     public void updatePlayerHand(Player player, JPanel panel, ActionListener listener, GameMode gamemode) {
-        panel.removeAll();
+        panel.removeAll(); //removes old cards in panel
         int index = 0;
         JButton b;
+        //loop for adding current hand
         for (Card c : player.getHand()) {
         	if ((gamemode == GameMode.CPU_EASY || gamemode == gamemode.CPU_HARD) && game.getPlayer2() == player) {
-        		b = new JButton(" ");
+        		b = new JButton(" "); //hide cpu cards
         	}
         	else {
-        		b = new JButton(c.toString());
+        		b = new JButton(c.toString()); //show if plyer
         	}
+        	//set listener for card value
             b.setActionCommand(String.valueOf(index));
             b.addActionListener(listener);
             panel.add(b);
             index++;
         }
+        //update
         panel.revalidate();
         panel.repaint();
     }
 
+    //basic getters for player panels
     public JPanel getPlayer1Panel() { return player1Panel; }
     public JPanel getPlayer2Panel() { return player2Panel; }
 
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
+    //basic setter for controller
+    // @param controller: controller instance
+    public void setController(Controller controller) {this.controller = controller;}
 
     @Override
+    /*
+     * update event for when the crib is updated
+     */
     public void onCribUpdated() {
-        cribCardsPanel.removeAll();
-        for (Card c : controller.getGame().getCrib()) {
-            cribCardsPanel.add(new JLabel(c.toString()));
+        cribCardsPanel.removeAll(); //remove prev cards
+        for (Card c : controller.getGame().getCrib()) { //loop for adding current cards
+            cribCardsPanel.add(new JLabel(c.toString())); //label those cards!
         }
+        //update
         cribCardsPanel.revalidate();
         cribCardsPanel.repaint();
     }
 
     @Override
+    /*
+     * event for starter card draw
+     * @param card:
+     * 		the starter card drawn.
+     */
     public void onStarterCardDrawn(Card card) {
-        updateStarterCard(card);
+        updateStarterCard(card); //update visual for starter card
     }
     
     @Override
+    /*
+     * event for play stack being updated
+     * @param playStack:
+     * 		current cards in the playstack
+     */
     public void onPlayStackUpdated(ArrayList<Card> playStack) {
-        playCardsPanel.removeAll();
+        playCardsPanel.removeAll(); //remove prev card visuals
 
-        int total = 0;
+        int total = 0; //counter
         for (Card card : playStack) {
-            total += card.getValue(); // Make sure this uses correct Cribbage logic
-            JButton cardButton = new JButton(card.toString());
-            playCardsPanel.add(cardButton);
+            total += card.getValue();
+            JButton cardButton = new JButton(card.toString()); 
+            playCardsPanel.add(cardButton); //add new card
         }
 
-        playStackTotalLabel.setText("Play Stack Total: " + total);
+        playStackTotalLabel.setText("Play Stack Total: " + total); //label text update
 
+        //update panel to screen
         playCardsPanel.revalidate();
         playCardsPanel.repaint();
     }
     
     @Override
+    /*
+     * event for the score being updated.
+     * @param player1Score:
+     * 		score of player 1
+     * @param player2Score:
+     * 		score of player 2
+     */
     public void onScoreUpdated(int player1Score, int player2Score) {
+    	//update score labels
         player1ScoreLabel.setText(game.getPlayer1().getName() + ": " + player1Score);
         player2ScoreLabel.setText(game.getPlayer2().getName() + ": " + player2Score);
 
+        //check if someone has won yet.
         if (game.getPlayer1().getScore() >= 121 || game.getPlayer2().getScore() >= 121) {
-            controller.setGameOver(true);
+            controller.setGameOver(true); //ends game absolutely
 
+            //check who won
             String winner = game.getPlayer1().getScore() >= 121
                 ? game.getPlayer1().getName()
                 : game.getPlayer2().getName();
+            
+            //second check in case both players crossed 121, winner should be higher score
+            winner = game.getPlayer1().getScore() > game.getPlayer2().getScore()
+            		? game.getPlayer1().getName()
+            		: game.getPlayer2().getName();
 
             // Increment the winner's win count
             if (winner.equals(game.getPlayer1().getName())) {
@@ -210,10 +285,11 @@ public class View extends JFrame implements GameObserver {
                 game.incrementPlayer2Wins();
             }
             
+            //update wins display
             winsDisplayLabel.setText("Wins - " + game.getPlayer1().getName() + ": " + game.getPlayer1Wins() + ", "
             + game.getPlayer2().getName() + ": " + game.getPlayer2Wins());
-
-
+            
+            //game over msg
             JOptionPane.showMessageDialog(
                 null,
                 winner + " wins the game!",
@@ -221,6 +297,7 @@ public class View extends JFrame implements GameObserver {
                 JOptionPane.INFORMATION_MESSAGE
             );
 
+            //replay option
             int choice = JOptionPane.showConfirmDialog(
                 null,
                 "Would you like to play again?",
@@ -228,6 +305,7 @@ public class View extends JFrame implements GameObserver {
                 JOptionPane.YES_NO_OPTION
             );
 
+            //if replay
             if (choice == JOptionPane.YES_OPTION) {
                 // Delay restart until after current call stack clears
                 SwingUtilities.invokeLater(() -> {
@@ -243,26 +321,36 @@ public class View extends JFrame implements GameObserver {
         }
     }
 
-    
+    /*
+     * event for dealer update
+     * @param dealer:
+     * 		whichever player is the new dealer
+     */
     public void updateDealerIndicator(Player dealer) {
-        String p1Title = controller.getGame().getPlayer1().getName();
-        String p2Title = controller.getGame().getPlayer2().getName();
-
+    	//check for dealer
         if (dealer == controller.getGame().getPlayer1()) {
-            p1Title += " (Dealer)";
+            p1Name += " (Dealer)";
         } else {
-            p2Title += " (Dealer)";
+            p2Name += " (Dealer)";
         }
+        
+        //set panels according to names
+        player1Panel.setBorder(BorderFactory.createTitledBorder(p1Name));
+        player2Panel.setBorder(BorderFactory.createTitledBorder(p2Name));
 
-        player1Panel.setBorder(BorderFactory.createTitledBorder(p1Title));
-        player2Panel.setBorder(BorderFactory.createTitledBorder(p2Title));
-
+        //update screen
         player1Panel.repaint();
         player2Panel.repaint();
     }
 
+    /*
+     * method for game initialization on view run.
+     * @param args[]:
+     * 		main args, unused here.
+     */
     public static void main(String[] args) { 	
         String[] options = {"Human vs Human", "Human vs CPU"};
+        // difficulty selection
         int mode = JOptionPane.showOptionDialog(
             null,
             "Choose game mode:",
@@ -274,6 +362,7 @@ public class View extends JFrame implements GameObserver {
             null
         );
 
+        //set player1name
         String player1Name = JOptionPane.showInputDialog(null, "Enter name for Player 1:");
         if (player1Name == null || player1Name.trim().isEmpty()) {
             player1Name = "Player 1";
@@ -283,8 +372,9 @@ public class View extends JFrame implements GameObserver {
         GameMode gamemode;
 
         if (mode == 1) { // Human vs CPU
-            player2Name = "CPU";
+            player2Name = "CPU"; //default name
             
+            //cpu difficulty selection
             String[] difficultyOptions = {"Easy", "Hard"};
             int difficulty = JOptionPane.showOptionDialog(
                 null,
@@ -297,6 +387,7 @@ public class View extends JFrame implements GameObserver {
                 null
             );
 
+            //sets le gamemode depending on choice
             if (difficulty == 0) {
                 gamemode = GameMode.CPU_EASY;
             } else {
@@ -310,11 +401,54 @@ public class View extends JFrame implements GameObserver {
             gamemode = GameMode.PVP;
         }
         
-        game = new Game(player1Name, player2Name);
-        View view = new View(player1Name, player2Name);
-        controller = new Controller(game, view, gamemode);
+        //create game 
+        game = new Game(player1Name, player2Name); //init game
+        View view = new View(player1Name, player2Name); //intialize view
+        controller = new Controller(game, view, gamemode); //init controller
 
+        //set the game to begin
         controller.startGame();
     }
+
+    //method for updating to player1 turn
+	public void player1Turn() {
+		turnLabel.setText(p1Name + "'s turn!");
+	}
+
+	//method for updating to player2's turn
+	public void player2Turn() {
+		turnLabel.setText(p2Name + "'s turn!");
+	}
+
+	/*
+	 * event for end of round summary display.
+	 * @param startCard:
+	 * 		starting card
+	 * @param p1Points:
+	 * 		player 1's point total
+	 * @param p2Points:
+	 * 		player 2's point total
+	 * @param cribPoints:
+	 * 		cribPoint total
+	 */
+	public void showSummary(Card startCard, int p1Points, int p2Points, int cribPoints) {
+		//show stats
+		JOptionPane.showMessageDialog(null,
+	            "Show Phase:\n\n" +
+	            p1Name + "'s hand: " + game.getPlayer1OriginalHand() + "\n" +
+	            "Starter: " + startCard + "\n" +
+	            "Points: " + p1Points + "\n\n" +
+
+	            p2Name + "'s hand: " + game.getPlayer2OriginalHand() + "\n" +
+	            "Starter: " + startCard + "\n" +
+	            "Points: " + p2Points + "\n\n" +
+
+	            "Crib: " + game.getCrib() + "\n" +
+	            "Starter: " + startCard + "\n" +
+	            "Crib Points: " + cribPoints,
+	            "Show Phase",
+	            JOptionPane.INFORMATION_MESSAGE
+	        );
+	}
 
 }
