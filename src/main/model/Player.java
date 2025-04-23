@@ -46,6 +46,10 @@ public class Player implements CpuStrategy{
     public int getScore() {
         return score;
     }
+    
+    public void resetScore() {
+        this.score = 0;
+    }
 
     public String getName() {
         return name;

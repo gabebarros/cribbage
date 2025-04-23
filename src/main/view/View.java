@@ -149,6 +149,41 @@ public class View extends JFrame implements GameObserver {
     public void onScoreUpdated(int player1Score, int player2Score) {
         player1ScoreLabel.setText(game.getPlayer1().getName() + ": " + player1Score);
         player2ScoreLabel.setText(game.getPlayer2().getName() + ": " + player2Score);
+
+        if (game.getPlayer1().getScore() >= 121 || game.getPlayer2().getScore() >= 121) {
+            controller.setGameOver(true);
+
+            String winner = game.getPlayer1().getScore() >= 121
+                ? game.getPlayer1().getName()
+                : game.getPlayer2().getName();
+
+            JOptionPane.showMessageDialog(
+                null,
+                winner + " wins the game!",
+                "Game Over",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+
+            int choice = JOptionPane.showConfirmDialog(
+                null,
+                "Would you like to play again?",
+                "Play Again?",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (choice == JOptionPane.YES_OPTION) {
+                // Delay restart until after current call stack clears
+                SwingUtilities.invokeLater(() -> {
+                    game.resetForNewGame();
+                    onCribUpdated();
+                    updateStarterCard(null);
+                    controller.setGameOver(false);
+                    controller.startGame();
+                });
+            } else {
+                System.exit(0);
+            }
+        }
     }
     
     public void updateDealerIndicator(Player dealer) {

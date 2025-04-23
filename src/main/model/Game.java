@@ -134,6 +134,18 @@ public class Game {
         notifyPlayStackUpdated();
     }
     
+    public void resetForNewGame() {
+        this.deck = new Deck();
+        this.crib.clear();
+        this.playStack.clear();
+        this.startCard = null;
+        this.player1.resetScore();
+        this.player2.resetScore();
+        
+        updateScore();
+        notifyPlayStackUpdated();
+    }
+    
     public void setDealer(Player p) {
     	this.dealer = p;
     }
