@@ -109,5 +109,7 @@ public class PlayerTest {
 		for(int i = 0; i < 5; i++) {
 			assertEquals(hand.get(i), p1.getHand().get(i));
 		}
+		
+		
 	}
 }
