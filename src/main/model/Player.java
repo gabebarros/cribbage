@@ -23,6 +23,7 @@ public class Player implements CpuStrategy{ //player can be cpu
 	public Player(String name) {
 		this.name = name;
 		this.score = 0;
+		this.hand = new ArrayList<Card>();
 	}
 	
 	/*
@@ -40,12 +41,7 @@ public class Player implements CpuStrategy{ //player can be cpu
 	 * 		hand to give to player
 	 */
 	public void setHand(ArrayList<Card> cards) {
-		this.hand = new ArrayList<Card>();
-		
-		for (Card c : cards) { //add all cards to hand
-			this.hand.add(c);
-		}
-		return;
+		this.hand = new ArrayList<Card>(cards);
     }
 
 	//Standard getter, reference handled
