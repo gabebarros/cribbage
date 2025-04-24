@@ -329,9 +329,15 @@ public class View extends JFrame implements GameObserver {
     public void updateDealerIndicator(Player dealer) {
     	//check for dealer
         if (dealer == controller.getGame().getPlayer1()) {
-            p1Name += " (Dealer)";
+        	if (!p1Name.equals(dealer.getName() + " (Dealer)")) {
+        		p1Name += " (Dealer)";
+        	}
+        	p2Name = game.getPlayer2().getName();
         } else {
-            p2Name += " (Dealer)";
+        	if (!p2Name.equals(dealer.getName() + " (Dealer)")) {
+        		p2Name += " (Dealer)";
+        	}
+        	p1Name = game.getPlayer1().getName();
         }
         
         //set panels according to names
