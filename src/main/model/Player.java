@@ -12,6 +12,7 @@ public class Player {
 	public Player(String name) {
 		this.name = name;
 		this.score = 0;
+		this.hand = new ArrayList<Card>();
 	}
 	
 	public void addScore(int addedScore) {
@@ -19,11 +20,7 @@ public class Player {
 	}
 	
 	public void setHand(ArrayList<Card> cards) {
-		this.hand = new ArrayList<Card>();
-		
-		for (Card c : cards) {
-			this.hand.add(c);
-		}
+		this.hand = new ArrayList<Card>(cards);
     }
 
     public ArrayList<Card> getHand() {
