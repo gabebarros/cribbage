@@ -101,6 +101,11 @@ public class Game {
     public void setPlayer1OriginalHand(ArrayList<Card> hand) {
         this.player1OriginalHand = hand;
     }
+    
+    //Standard setter
+    public void setPlayStack(ArrayList<Card> ps) {
+    	this.playStack = ps;
+    }
 
     //Standard setter
     public void setPlayer2OriginalHand(ArrayList<Card> hand) {

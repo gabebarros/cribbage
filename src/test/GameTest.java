@@ -1,0 +1,99 @@
+package test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.junit.jupiter.api.Test;
+
+import main.model.Card;
+import main.model.Deck;
+import main.model.Game;
+import main.model.Rank;
+import main.model.Suit;
+
+public class GameTest {
+	@Test
+	public void testDealHands() {
+		Game g1 = new Game("a", "b");
+		
+		assertEquals(g1.getPlayer1().getName(), "a");
+		assertEquals(g1.getPlayer2().getName(), "b");
+		
+		g1.dealHands();
+		
+		assertEquals(g1.getPlayer1().getHand().size(), 6);
+		assertEquals(g1.getPlayer2().getHand().size(), 6);
+		
+		ArrayList<Card> h1 = g1.getPlayer1().getHand();
+		ArrayList<Card> h2 = g1.getPlayer2().getHand();
+		
+		Collections.sort(h1);
+		Collections.sort(h2);
+		
+		for(int i = 0; i < 6; i++) {
+			assertEquals(g1.getPlayer1().getHand().get(i), h1.get(i));
+			assertEquals(g1.getPlayer2().getHand().get(i), h2.get(i));
+		}
+	}
+	
+	@Test
+	public void testAddToCrib() {
+		Game g1 = new Game("a", "b");
+		
+		ArrayList<Card> oCrib = g1.getCrib();
+		
+		oCrib.add(Card.getCard(Rank.ACE, Suit.SPADES));
+		g1.addToCrib(Card.getCard(Rank.ACE, Suit.SPADES));
+		
+		assertTrue(g1.getCrib().contains(Card.getCard(Rank.ACE, Suit.SPADES)));
+		
+		assertEquals(oCrib.get(0), g1.getCrib().get(0));
+	}
+	
+	@Test
+	public void testPlayCard() {
+		Game g1 = new Game("a", "b");
+		
+		ArrayList<Card> h1 = new ArrayList<Card>();
+		ArrayList<Card> h2 = new ArrayList<Card>();
+		
+		h1.add(Card.getCard(Rank.ACE, Suit.CLUBS));
+		h1.add(Card.getCard(Rank.ACE, Suit.SPADES));
+		
+		h2.add(Card.getCard(Rank.ACE, Suit.HEARTS));
+		h2.add(Card.getCard(Rank.ACE, Suit.DIAMONDS));
+		
+		ArrayList<Card> ps = new ArrayList<Card>();
+		
+		ps.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.QUEEN, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.KING, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.ACE, Suit.HEARTS));
+		
+		g1.setPlayStack(ps);
+
+		g1.setPlayer1OriginalHand(h1);
+		g1.getPlayer1().setHand(h1);
+		
+		g1.setPlayer2OriginalHand(h2);
+		g1.getPlayer2().setHand(h2);
+
+		
+		g1.playCard(g1.getPlayer1().playCard(0), g1.getPlayer1());
+		
+		assertEquals(g1.getPlayStack().size(), 1);
+		
+		ps.add(Card.getCard(Rank.FIVE, Suit.SPADES));
+		
+		g1.setPlayStack(ps);
+		
+		g1.playCard(g1.getPlayer1().playCard(0), g1.getPlayer1());
+		assertEquals(g1.getPlayStack().size(), 3);
+		assertEquals(g1.getPlayer1().getScore(), 0);
+		assertEquals(g1.getPlayer2().getScore(), 0);
+	}
+	
+
+}
