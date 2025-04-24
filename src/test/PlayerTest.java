@@ -34,6 +34,10 @@ public class PlayerTest {
 		assertEquals(p2.getScore(), 2);
 		assertEquals(p1.getScore(), 5);
 		
+		p2.resetScore();
+		
+		assertEquals(p2.getScore(), 0);
+		assertEquals(p1.getScore(), 5);
 	}
 	
 	@Test
@@ -109,8 +113,50 @@ public class PlayerTest {
 		for(int i = 0; i < 5; i++) {
 			assertEquals(hand.get(i), p1.getHand().get(i));
 		}
-		
-		
+	}
 	
+	@Test
+	public void testRandomMove() {
+		
+		Player p1 = new Player("p1");
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(Card.getCard(Rank.ACE, Suit.CLUBS));
+		
+		p1.setHand(hand);
+		
+		assertEquals(p1.makeRandomMove(), Card.getCard(Rank.ACE, Suit.CLUBS));
+	}
+	
+	@Test
+	public void testSmartMove() {
+		Player p1 = new Player("p1");
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		
+		hand.add(Card.getCard(Rank.ACE, Suit.CLUBS));
+		hand.add(Card.getCard(Rank.TWO, Suit.CLUBS));
+		hand.add(Card.getCard(Rank.THREE, Suit.CLUBS));
+		hand.add(Card.getCard(Rank.FOUR, Suit.CLUBS));
+		hand.add(Card.getCard(Rank.ACE, Suit.DIAMONDS));
+		
+		p1.setHand(hand);
+		
+		ArrayList<Card> playStack = new ArrayList<Card>();
+		
+		
+		playStack.add(Card.getCard(Rank.EIGHT, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.JACK, Suit.DIAMONDS));
+		playStack.add(Card.getCard(Rank.TWO, Suit.HEARTS));
+
+		
+		assertEquals(p1.makeSmartMove(playStack), Card.getCard(Rank.TWO, Suit.CLUBS));
+		
+		playStack.add(Card.getCard(Rank.THREE, Suit.SPADES));
+		playStack.add(Card.getCard(Rank.THREE, Suit.HEARTS));
+
+		assertEquals(p1.makeSmartMove(playStack), Card.getCard(Rank.THREE, Suit.CLUBS));
+		
 	}
 }
