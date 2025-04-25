@@ -114,12 +114,12 @@ public class Game {
 
     //standard getter
     public ArrayList<Card> getPlayer1OriginalHand() {
-        return player1OriginalHand;
+        return new ArrayList<Card>(player1OriginalHand);
     }
 
     //standard getter
     public ArrayList<Card> getPlayer2OriginalHand() {
-        return player2OriginalHand;
+    	return new ArrayList<Card>(player2OriginalHand);
     }
 
     //add observer method, standard for observer dp
