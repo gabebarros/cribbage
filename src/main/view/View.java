@@ -76,7 +76,7 @@ public class View extends JFrame implements GameObserver {
         starterCardLabel.setHorizontalAlignment(SwingConstants.CENTER); // Aligns text inside label
         starterCardLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, starterCardLabel.getPreferredSize().height)); // Allows stretching
         
-     // Top container for wins corner + starter label
+        // Top container for wins corner + starter label
         JPanel topCribHeader = new JPanel(new BorderLayout());
         topCribHeader.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));  // Limits height
 
@@ -354,73 +354,6 @@ public class View extends JFrame implements GameObserver {
         player2Panel.repaint();
     }
 
-    /*
-     * method for game initialization on view run.
-     * @param args[]:
-     * 		main args, unused here.
-     */
-    public static void main(String[] args) { 	
-        String[] options = {"Human vs Human", "Human vs CPU"};
-        // difficulty selection
-        int mode = JOptionPane.showOptionDialog(
-            null,
-            "Choose game mode:",
-            "Cribbage Game Mode",
-            JOptionPane.DEFAULT_OPTION,
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            options,
-            null
-        );
-
-        //set player1name
-        String player1Name = JOptionPane.showInputDialog(null, "Enter name for Player 1:");
-        if (player1Name == null || player1Name.trim().isEmpty()) {
-            player1Name = "Player 1";
-        }
-
-        String player2Name;
-        GameMode gamemode;
-
-        if (mode == 1) { // Human vs CPU
-            player2Name = "CPU"; //default name
-            
-            //cpu difficulty selection
-            String[] difficultyOptions = {"Easy", "Hard"};
-            int difficulty = JOptionPane.showOptionDialog(
-                null,
-                "Choose CPU difficulty:",
-                "CPU Difficulty",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                difficultyOptions,
-                null
-            );
-
-            //sets le gamemode depending on choice
-            if (difficulty == 0) {
-                gamemode = GameMode.CPU_EASY;
-            } else {
-                gamemode = GameMode.CPU_HARD;
-            }
-        } else { // Human vs Human or default
-            player2Name = JOptionPane.showInputDialog(null, "Enter name for Player 2:");
-            if (player2Name == null || player2Name.trim().isEmpty()) {
-                player2Name = "Player 2";
-            }
-            gamemode = GameMode.PVP;
-        }
-        
-        //create game 
-        game = new Game(player1Name, player2Name); //init game
-        View view = new View(player1Name, player2Name); //intialize view
-        controller = new Controller(game, view, gamemode); //init controller
-
-        //set the game to begin
-        controller.startGame();
-    }
-
     //method for updating to player1 turn
 	public void player1Turn() {
 		turnLabel.setText(p1Name + "'s turn!");
@@ -468,5 +401,72 @@ public class View extends JFrame implements GameObserver {
 		// Clear message after a few seconds:
 		new javax.swing.Timer(3000, e -> scoreMessageLabel.setText(" ")).start();
 	}
+	
+	/*
+     * method for game initialization on view run.
+     * @param args[]:
+     * 		main args, unused here.
+     */
+    public static void main(String[] args) { 	
+        String[] options = {"Human vs Human", "Human vs CPU"};
+        // difficulty selection
+        int mode = JOptionPane.showOptionDialog(
+            null,
+            "Choose game mode:",
+            "Cribbage Game Mode",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            null
+        );
+
+        //set player1name
+        String player1Name = JOptionPane.showInputDialog(null, "Enter name for Player 1:");
+        if (player1Name == null || player1Name.trim().isEmpty()) {
+            player1Name = "Player 1";
+        }
+
+        String player2Name;
+        GameMode gamemode;
+
+        if (mode == 1) { // Human vs CPU
+            player2Name = "CPU"; //default name
+            
+            //cpu difficulty selection
+            String[] difficultyOptions = {"Easy", "Hard"};
+            int difficulty = JOptionPane.showOptionDialog(
+                null,
+                "Choose CPU difficulty:",
+                "CPU Difficulty",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                difficultyOptions,
+                null
+            );
+
+            //set gamemode depending on choice
+            if (difficulty == 0) {
+                gamemode = GameMode.CPU_EASY;
+            } else {
+                gamemode = GameMode.CPU_HARD;
+            }
+        } else { // Human vs Human or default
+            player2Name = JOptionPane.showInputDialog(null, "Enter name for Player 2:");
+            if (player2Name == null || player2Name.trim().isEmpty()) {
+                player2Name = "Player 2";
+            }
+            gamemode = GameMode.PVP;
+        }
+        
+        //create game 
+        game = new Game(player1Name, player2Name); //init game
+        View view = new View(player1Name, player2Name); //intialize view
+        controller = new Controller(game, view, gamemode); //init controller
+
+        //set the game to begin
+        controller.startGame();
+    }
 
 }

@@ -62,7 +62,7 @@ public class Player implements CpuStrategy{ //player can be cpu
     
     //Standard getter
     public int getScore() {
-        return score + 0; //no ref
+        return score + 0;
     }
     
     //reset score to zero

@@ -63,12 +63,12 @@ public class Game {
 
     //Standard getter
     public Player getPlayer1() { 
-    	return player1; //necessary reference
+    	return player1; 
     }
     
     //Standard getter
     public Player getPlayer2() { 
-    	return player2; //necessary reference
+    	return player2; 
     }
     
     public int getObserverCount() {
@@ -78,7 +78,7 @@ public class Game {
     
     //Standard getter
     public ArrayList<Card> getCrib() {
-    	return new ArrayList<Card>(crib); //eliminated reference
+    	return new ArrayList<Card>(crib); 
     }
     
     
@@ -229,7 +229,7 @@ public class Game {
     
     //Standard getter
     public Player getDealer() {
-    	return this.dealer; //necessary reference
+    	return this.dealer; 
     }
 
     //Standard getter
@@ -239,12 +239,12 @@ public class Game {
     
     //Standard getter
     public int getPlayer1Wins() { 
-    	return player1Wins + 0; //no reference
+    	return player1Wins + 0; 
     }
     
     //Standard getter
     public int getPlayer2Wins() { 
-    	return player2Wins + 0; //no reference
+    	return player2Wins + 0;
     }
     
     //increment wins on the model

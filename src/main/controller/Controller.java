@@ -44,11 +44,6 @@ public class Controller {
         view.setController(this); 
         this.gamemode = gamemode;
     }
-
-    // Standard Getter method
-    public Game getGame() {
-        return game;
-    }
     
     /*
      * Method for playing to the crib, with different logic based on the gamemode. Performs actions on the model and view. 
@@ -139,7 +134,13 @@ public class Controller {
         	view.player2Turn();
             if (gamemode == GameMode.CPU_EASY || gamemode == GameMode.CPU_HARD) {
             	new javax.swing.Timer(1000, e -> {
-            		Card playedCard = game.getPlayer2().makeSmartMove(game.getPlayStack());
+            		Card playedCard;
+            		if (gamemode == GameMode.CPU_HARD) {
+            			playedCard = game.getPlayer2().makeSmartMove(game.getPlayStack());
+            		}
+            		else {
+            			playedCard = game.getPlayer2().makeRandomMove();
+            		}
                     game.playCard(playedCard, game.getPlayer2());
                     isPlayer1Turn = true;
                     updateHands();
@@ -159,7 +160,7 @@ public class Controller {
     }
 
     /*
-     * method for updating the hands of both players. Gamemode irrelevant
+     * method for updating the hands of both players.
      */
     private void updateHands() {
         view.updatePlayerHand(game.getPlayer1(), view.getPlayer1Panel(), e -> {}, gamemode);
@@ -169,7 +170,7 @@ public class Controller {
     }
 
     /*
-     * method to start the game, gamemode irrelevant
+     * method to start the game
      */
     public void startGame() {
         // Kick off the first round
@@ -180,7 +181,7 @@ public class Controller {
     }
 
     /*
-     * method to start a round, gamemode irrlevant
+     * method to start a round
      */
     private void startRound() {
     	if (gameOver) return;
@@ -249,6 +250,11 @@ public class Controller {
         
         // Start next round
         startRound();
+    }
+    
+    // Standard Getter method
+    public Game getGame() {
+        return game;
     }
     
     //Standard getter
