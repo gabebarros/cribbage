@@ -71,10 +71,16 @@ public class Game {
     	return player2; //necessary reference
     }
     
+    public int getObserverCount() {
+    	return observers.size();
+    }
+    
+    
     //Standard getter
     public ArrayList<Card> getCrib() {
     	return new ArrayList<Card>(crib); //eliminated reference
     }
+    
     
     //Standard getter
     public Card getStartCard() {
