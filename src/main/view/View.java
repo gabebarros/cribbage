@@ -32,6 +32,7 @@ public class View extends JFrame implements GameObserver {
     // score labels
     private JLabel player1ScoreLabel;
     private JLabel player2ScoreLabel;
+    private JLabel scoreMessageLabel = new JLabel(" "); // shows last scoring message
     
     //turn indicator atts
     private JLabel turnLabel = new JLabel();
@@ -127,6 +128,10 @@ public class View extends JFrame implements GameObserver {
         // Score panel
         player1ScoreLabel = new JLabel(p1 + " : 0");
         player2ScoreLabel = new JLabel(p2 + " : 0");
+        
+        // Score message display
+        scoreMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        cribPanel.add(scoreMessageLabel); // Add it to the bottom of the main panel
 
         scorePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -455,6 +460,13 @@ public class View extends JFrame implements GameObserver {
 	            "Show Phase",
 	            JOptionPane.INFORMATION_MESSAGE
 	        );
+	}
+	
+	public void showScoreMessage(String message) {
+		scoreMessageLabel.setText(message);
+		
+		// Clear message after a few seconds:
+		new javax.swing.Timer(3000, e -> scoreMessageLabel.setText(" ")).start();
 	}
 
 }

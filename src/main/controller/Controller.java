@@ -207,7 +207,12 @@ public class Controller {
         int p1Points = scorer.scoreHand(game.getPlayer1OriginalHand(), startCard);
         int p2Points = scorer.scoreHand(game.getPlayer2OriginalHand(), startCard);
         int cribPoints = scorer.scoreHand(game.getCrib(), startCard);
-
+        int heelsPoints = scorer.twoForHisHeels(game.getStartCard());
+        
+        if (heelsPoints > 0) {
+        	game.getDealer().addScore(heelsPoints);
+        	view.showScoreMessage(game.getDealer().getName() + " scores " + heelsPoints + " for His Heels!");
+        }
         //update scores in model
         game.getPlayer1().addScore(p1Points);
         game.getPlayer2().addScore(p2Points);
