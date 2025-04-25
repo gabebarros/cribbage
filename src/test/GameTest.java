@@ -12,6 +12,7 @@ import main.model.Deck;
 import main.model.Game;
 import main.model.Rank;
 import main.model.Suit;
+import main.model.Scorer;
 
 public class GameTest {
 	@Test
@@ -89,10 +90,137 @@ public class GameTest {
 		
 		g1.setPlayStack(ps);
 		
+		
 		g1.playCard(g1.getPlayer1().playCard(0), g1.getPlayer1());
 		assertEquals(g1.getPlayStack().size(), 3);
 		assertEquals(g1.getPlayer1().getScore(), 0);
 		assertEquals(g1.getPlayer2().getScore(), 0);
+	}
+	
+	@Test
+	public void testPlayCardPlaystack31() {
+		Game g1 = new Game("a", "b");
+		
+		ArrayList<Card> h1 = new ArrayList<Card>();
+		ArrayList<Card> h2 = new ArrayList<Card>();
+		
+		h1.add(Card.getCard(Rank.ACE, Suit.CLUBS));
+		h1.add(Card.getCard(Rank.ACE, Suit.SPADES));
+		
+		h2.add(Card.getCard(Rank.ACE, Suit.HEARTS));
+		h2.add(Card.getCard(Rank.ACE, Suit.DIAMONDS));
+		
+		g1.setPlayer1OriginalHand(h1);
+		g1.getPlayer1().setHand(h1);
+		
+		g1.setPlayer2OriginalHand(h2);
+		g1.getPlayer2().setHand(h2);
+		
+		ArrayList<Card> ps = new ArrayList<Card>();
+		
+		ps.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.QUEEN, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.KING, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.THREE, Suit.HEARTS));
+		
+		g1.setPlayStack(ps);
+
+		g1.playCard(g1.getPlayer1().playCard(0), g1.getPlayer1());
+		
+		assertEquals(ps.size(), 1);
+		assertEquals(g1.getPlayer1().getScore(), 0);
+		assertEquals(g1.getPlayer2().getScore(), 1);
+		
+		ps.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.QUEEN, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.KING, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.THREE, Suit.HEARTS));
+		
+		g1.setPlayStack(ps);
+		
+		g1.playCard(g1.getPlayer2().playCard(0), g1.getPlayer2());
+		assertEquals(ps.size(), 1);
+		assertEquals(g1.getPlayer1().getScore(), 1);
+		assertEquals(g1.getPlayer2().getScore(), 1);
+	}
+	
+	@Test
+	public void testResetRound() {
+		Game g1 = new Game("a", "b");
+		
+		ArrayList<Card> h1 = new ArrayList<Card>();
+		ArrayList<Card> h2 = new ArrayList<Card>();
+		
+		h1.add(Card.getCard(Rank.ACE, Suit.CLUBS));
+		h1.add(Card.getCard(Rank.ACE, Suit.SPADES));
+		
+		h2.add(Card.getCard(Rank.ACE, Suit.HEARTS));
+		h2.add(Card.getCard(Rank.ACE, Suit.DIAMONDS));
+		
+		g1.setPlayer1OriginalHand(h1);
+		g1.getPlayer1().setHand(h1);
+		
+		g1.setPlayer2OriginalHand(h2);
+		g1.getPlayer2().setHand(h2);
+		
+		ArrayList<Card> ps = new ArrayList<Card>();
+		
+		ps.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.QUEEN, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.KING, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.THREE, Suit.HEARTS));
+		
+		g1.setPlayStack(ps);
+		g1.playCard(g1.getPlayer1().playCard(0), g1.getPlayer1());
+		g1.playCard(g1.getPlayer2().playCard(0), g1.getPlayer2());
+		
+		g1.resetForNewRound();
+		
+		assertEquals(g1.getCrib().size(), 0);
+		assertEquals(g1.getPlayStack().size(), 0);
+		assertEquals(g1.getStartCard(), null);
+		assertEquals(g1.getPlayer1().getScore(), 0);
+		assertEquals(g1.getPlayer2().getScore(), 3);
+	}
+	
+	@Test
+	public void testResetGame() {
+		Game g1 = new Game("a", "b");
+		
+		ArrayList<Card> h1 = new ArrayList<Card>();
+		ArrayList<Card> h2 = new ArrayList<Card>();
+		
+		h1.add(Card.getCard(Rank.ACE, Suit.CLUBS));
+		h1.add(Card.getCard(Rank.ACE, Suit.SPADES));
+		
+		h2.add(Card.getCard(Rank.ACE, Suit.HEARTS));
+		h2.add(Card.getCard(Rank.ACE, Suit.DIAMONDS));
+		
+		g1.setPlayer1OriginalHand(h1);
+		g1.getPlayer1().setHand(h1);
+		
+		g1.setPlayer2OriginalHand(h2);
+		g1.getPlayer2().setHand(h2);
+		
+		ArrayList<Card> ps = new ArrayList<Card>();
+		
+		ps.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.QUEEN, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.KING, Suit.HEARTS));
+		ps.add(Card.getCard(Rank.THREE, Suit.HEARTS));
+		
+		g1.setPlayStack(ps);
+		g1.playCard(g1.getPlayer1().playCard(0), g1.getPlayer1());
+		g1.playCard(g1.getPlayer2().playCard(0), g1.getPlayer2());
+		
+		g1.resetForNewGame();
+		
+		assertEquals(g1.getCrib().size(), 0);
+		assertEquals(g1.getPlayStack().size(), 0);
+		assertEquals(g1.getStartCard(), null);
+		assertEquals(g1.getPlayer1().getScore(), 0);
+		assertEquals(g1.getPlayer2().getScore(), 0);
+		
 	}
 	
 
