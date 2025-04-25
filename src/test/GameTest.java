@@ -223,5 +223,32 @@ public class GameTest {
 		
 	}
 	
+	@Test
+	public void testDealer() {
+		Game g1 = new Game("a", "b");
+		
+		g1.setDealer(g1.getPlayer1());
+		assertEquals(g1.getDealer(), g1.getPlayer1());
+		
+		g1.setDealer(g1.getPlayer2());
+		assertEquals(g1.getDealer(), g1.getPlayer2());
+	}
+	
+	@Test
+	public void testWinning() {
+		Game g1 = new Game("a", "b");
+		assertEquals(g1.getPlayer1Wins(), 0);
+		assertEquals(g1.getPlayer2Wins(), 0);
+		
+		g1.incrementPlayer1Wins();
+		g1.incrementPlayer1Wins();
+		g1.incrementPlayer1Wins();
+
+		g1.incrementPlayer2Wins();
+		
+		assertEquals(g1.getPlayer1Wins(), 3);
+		assertEquals(g1.getPlayer2Wins(), 1);
+	}
+	
 
 }
