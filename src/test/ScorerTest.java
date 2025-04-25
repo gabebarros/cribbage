@@ -264,11 +264,31 @@ class ScorerTest {
 	}
 	
 	@Test
-	void testRun_FaceCards() {
+
+	void testScoreHand() {
 		Scorer s = new Scorer();
 		
 		ArrayList<Card> hand = new ArrayList<Card>();
+
+		Card startCard = Card.getCard(Rank.JACK, Suit.HEARTS);
 		
+		hand.add(Card.getCard(Rank.FIVE, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.JACK, Suit.HEARTS));
+		hand.add(Card.getCard(Rank.SEVEN, Suit.CLUBS));
+		hand.add(Card.getCard(Rank.EIGHT, Suit.SPADES));
+		hand.add(Card.getCard(Rank.NINE, Suit.SPADES));
+		
+		
+		assertEquals(s.scoreHand(hand, startCard),9);
+	}
+
+	void testRun_FaceCards() {
+
+	
+		Scorer s = new Scorer();
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+
 		hand.add(Card.getCard(Rank.ACE, Suit.HEARTS));
 		hand.add(Card.getCard(Rank.TEN, Suit.SPADES));
 		hand.add(Card.getCard(Rank.JACK, Suit.DIAMONDS));
@@ -276,6 +296,7 @@ class ScorerTest {
 		hand.add(Card.getCard(Rank.KING, Suit.CLUBS));
 		
 		assertEquals(s.run(hand), 4);
+
 	}
 	
 	@Test
